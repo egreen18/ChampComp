@@ -1,0 +1,35 @@
+function champ_out = ItemAdd(itemdat,champ,item)
+%This function adds an item to the inventory of a champion and updates its
+%stats accordingly.
+%
+%    champ_out = ItemAdd(itemdat,champ,item)
+%
+%The output, champ_out, is the resulting champion structure. itemdat is the
+%item data structure. champ is the input champion structure. item is the 
+%item ID, a 4 digit scalar.
+champ_out = champ;
+slot = 0;
+i = 1;
+while i<7
+    if isempty(champ.inv{i})
+        slot = i;
+        i = 7;
+    else
+        i = i+1;
+    end
+end
+if slot == 0
+    disp("There is no room in this champion's inventory for another item.")
+else
+    item = ['x',num2str(item)];
+    champ_out.inv{slot} = itemdat.(item).name;
+    str = fieldnames(champ.stats);
+    sta_base = Level(champdat,champ.ch,champ.l);
+    for i = 1:length(str)
+        champ_out.stats.(str{i}) = champ_out.stats.(str{i}) ...
+            + itemdat.(item).stats.(str{i}).flat + itemdat.(item).stats...
+            .(str{i}).percent*champ_out.stats.(str{i}) + itemdat.(item)...
+            .stats.(str{i}).percentBase*sta_base.(str{i});
+    end
+end
+end
