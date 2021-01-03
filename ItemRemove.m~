@@ -1,4 +1,0 @@
-function champ = ItemRemove(itemdat,champdat,champ,slot)
-%This function removes a specified item from a champion's inventory
-%
-%   c
