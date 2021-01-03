@@ -2,6 +2,7 @@
 %that no items are utilizing a change in stats provided per level, so this
 %value can be constant for each item.
 load item_original.mat itemdat
+%% Fixing a nomenclature issue
 items = fieldnames(itemdat);
 str = fieldnames(itemdat.(items{1}).stats);
 fie = fieldnames(itemdat.(items{1}).stats.(str{1}));
@@ -26,6 +27,7 @@ for i = 1:length(items)
         end
     end
 end
+%% Fixing stat placement issues
 %manually fixing an issue with rejuvination bead
 itemdat.x1006.stats.healthRegen.percentBase = itemdat.x1006.stats.healthRegen.percent;
 itemdat.x1006.stats.healthRegen.percent = 0;
@@ -37,6 +39,28 @@ for i = 1:length(ite)
     if itemdat.(ite{i}).stats.attackSpeed.flat ~= 0
         itemdat.(ite{i}).stats.attackSpeed.percentBase = itemdat.(ite{i}).stats.attackSpeed.flat;
         itemdat.(ite{i}).stats.attackSpeed.flat = 0;
+    end
+end
+%% Investigating mythic passives
+for i = 1:length(items)
+    if strcmp(itemdat.(items{i}).rank,'MYTHIC')
+        for l = 1:length(itemdat.(items{i}).passives)
+            if itemdat.(items{i}).passives(l).mythic == 1
+                range = 1:length(str); %Exlcuding movespeed, its variant strucutre causes issues
+                check = 0;
+                for j = range(range~=18)
+                    for k = 1:length(fie)
+                            if itemdat.(items{i}).passives(l).stats.(str{j}).(fie{k}) > 0
+                                check = check+1;
+                            end
+                    end
+                end
+                if check == 0
+                        disp(itemdat.(items{i}).name+", ID: "+itemdat.(items{i}).id+...
+                            " is missing stats on its mythic passive.")
+                end
+            end
+        end
     end
 end
 save itemdat.mat itemdat
