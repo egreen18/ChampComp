@@ -8,6 +8,8 @@ function champ = ChampGen(itemdat,champdat,ch)
 %structure, and ch is the name of the desired champion as a string.
 %sta_base are the base stas of the champion at their level before items.
 %inv_id mirrors the inv character array but contains the corresponding item ids
+%pass is a field with 6 elements containing the item passives corresponding
+%to each inventory slot
 
 champ.l = 1;
 champ.ch = ch;
@@ -24,4 +26,9 @@ for i = 1:length(str)
     champ.stats.(str{i}) = sta.(str{i});
 end
 champ.sta_base = champ.stats;
+for i = 1:6
+    champ.pass.(['slot',num2str(i)]) = struct;
 end
+end
+
+

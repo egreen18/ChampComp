@@ -23,4 +23,5 @@ else
             .(item).stats.(str{i}).percentBase*champ.sta_base.(str{i})/100;
     end
 end
+champ_out.pass.(['slot',num2str(slot)]) = struct;
 end
