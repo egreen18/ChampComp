@@ -15,13 +15,8 @@ elseif slot > 6
 else
     champ_out.inv{slot} = ''; %Clearing slots and pulling IDs
     item = champ_out.inv_id{slot}; champ_out.inv_id{slot} = '';
-    str = fieldnames(itemdat.(item).stats);
-    for i = 1:length(str)
-        champ_out.stats.(str{i}) = champ_out.stats.(str{i}) ...
-            - itemdat.(item).stats.(str{i}).flat - itemdat.(item).stats...
-            .(str{i}).percent*champ_out.stats.(str{i})/100 - itemdat...
-            .(item).stats.(str{i}).percentBase*champ.sta_base.(str{i})/100;
-    end
+    statin = itemdat.(item).stats;
+    champ_out = StatChange(champ_out,statin,'remove');
+    champ_out.pass.(['slot',num2str(slot)]) = struct;
 end
-champ_out.pass.(['slot',num2str(slot)]) = struct;
 end

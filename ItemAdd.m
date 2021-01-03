@@ -33,13 +33,8 @@ else
     if m == 0          
         champ_out.inv{slot} = itemdat.(item).name;
         champ_out.inv_id{slot} = item;
-        str = fieldnames(itemdat.(item).stats);
-        for i = 1:length(str)
-            champ_out.stats.(str{i}) = champ_out.stats.(str{i}) ...
-                + itemdat.(item).stats.(str{i}).flat + itemdat.(item).stats...
-                .(str{i}).percent*champ_out.stats.(str{i})/100 + itemdat...
-                .(item).stats.(str{i}).percentBase*champ.sta_base.(str{i})/100;
-        end
+        statin = itemdat.(item).stats;
+        champ_out = StatChange(champ_out,statin,'add');
         champ_out.pass.(['slot',num2str(slot)]) = itemdat.(item).passives;
     elseif m == 1
         disp("A champion can only have one mythic item.")

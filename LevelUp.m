@@ -28,6 +28,7 @@ else
         %the same treatment isnt necessary for the base stat tracking
         champ_out.sta_base.(str{i}) = sta_new.(str{i});
     end
+    %Treating attackspeed individually
     %Base attack speed stat remains untouched across all levels
     %Subtracting stats of old level
     champ_out.stats.attackSpeed = champ_out.stats.attackSpeed - champ...

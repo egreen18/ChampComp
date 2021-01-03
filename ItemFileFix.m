@@ -63,4 +63,22 @@ for i = 1:length(items)
         end
     end
 end
+%% Fixing an issue with movespeed being treated as a scalar instead of a structure
+%First checking stats on all items, then checking stats on item passives
+for i = 1:length(items)
+    if ~isstruct(itemdat.(items{i}).stats.movespeed)
+        ms = itemdat.(items{i}).stats.movespeed;
+        itemdat.(items{i}).stats.movespeed = itemdat.x1001.stats.abilityPower;
+        itemdat.(items{i}).stats.movespeed.flat = ms;
+        disp("The movespeed stat structure of "+itemdat.(items{i}).name+" was fixed.")
+    end
+    for j = 1:length(itemdat.(items{i}).passives)
+        if ~isstruct(itemdat.(items{i}).passives(j).stats.movespeed)
+            ms = itemdat.(items{i}).passives(j).stats.movespeed;
+            itemdat.(items{i}).passives(j).stats.movespeed = itemdat.x1001.stats.abilityPower;
+            itemdat.(items{i}).passives(j).stats.movespeed.flat = ms;
+            disp("The movespeed passive stat structure of "+itemdat.(items{i}).name+" was fixed.")
+        end
+    end
+end
 save itemdat.mat itemdat
