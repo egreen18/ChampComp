@@ -15,29 +15,34 @@ elseif slot > 6
 else
     m = 0;
     item = ['x',num2str(item)];
+    %Checking that the item is valid
+    if isfield(itemdat,item)
     %Checking if item to be added is mythic
-    if strcmp(itemdat.(item).rank,'MYTHIC')
-        %Checking for mythic already in inventory
-        range = 1:6;
-        for i = range(range~=slot) %Skipping the slot being replaced
-            %Exlcusion of slot from range is to allow for the user to
-            %easily replace a mythic item with another
-            if ~isempty(champ.inv_id{i})
-                it = champ.inv_id{i};
-                if strcmp(itemdat.(it).rank,'MYTHIC')
-                    m = 1;
+        if strcmp(itemdat.(item).rank,'MYTHIC')
+            %Checking for mythic already in inventory
+            range = 1:6;
+            for i = range(range~=slot) %Skipping the slot being replaced
+                %Exlcusion of slot from range is to allow for the user to
+                %easily replace a mythic item with another
+                if ~isempty(champ.inv_id{i})
+                    it = champ.inv_id{i};
+                    if strcmp(itemdat.(it).rank,'MYTHIC')
+                        m = 1;
+                    end
                 end
             end
         end
-    end
-    if m == 0          
-        champ_out.inv{slot} = itemdat.(item).name;
-        champ_out.inv_id{slot} = item;
-        statin = itemdat.(item).stats;
-        champ_out = StatChange(champ_out,statin,'add');
-        champ_out.pass.(['slot',num2str(slot)]) = itemdat.(item).passives;
-    elseif m == 1
-        disp("A champion can only have one mythic item.")
+        if m == 0          
+            champ_out.inv{slot} = itemdat.(item).name;
+            champ_out.inv_id{slot} = item;
+            statin = itemdat.(item).stats;
+            champ_out = StatChange(champ_out,statin,'add');
+            champ_out.pass.(['slot',num2str(slot)]) = itemdat.(item).passives;
+        elseif m == 1
+            disp("A champion can only have one mythic item.")
+        end
+    else
+        disp("Please enter a valid item ID.")
     end
 end
 end

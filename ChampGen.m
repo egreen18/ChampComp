@@ -29,6 +29,9 @@ champ.sta_base = champ.stats;
 for i = 1:6
     champ.pass.(['slot',num2str(i)]) = struct;
 end
+abi = ['Q','W','E','R'];
+for i = 1:length(abi)
+    champ.abi.(abi(i)) = 0;
 end
 
 
