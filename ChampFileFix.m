@@ -7,6 +7,7 @@ abi = {'Q','W','E','R'};
 %% Investigating modifier types and attributes
 att = {''};
 mod = {''};
+relCha = {''};
 a = 0;
 m = 0;
 for i = 1:length(cha)
@@ -28,6 +29,7 @@ for i = 1:length(cha)
                                 mod{m} = ability(n).modifiers(k).units{1};
                                 disp("The modifier: "+mod{m}+" first appears in one of "+...
                                     champdat.(cha{i}).name+"'s abilities.")
+                                relCha{m} = champdat.(cha{i}).name;
                             end
                         end
                     end
@@ -37,9 +39,13 @@ for i = 1:length(cha)
     end
 end
 %% Manually fixing unit issues
+%Katarina modifier ambiguity
 for i = 1:5
     champdat.Katarina.abilities.W.effects.leveling.modifiers.units{i} = '% MS';
 end
+%Updating aatrox units
+champdat.Aatrox.abilities.E.effects(1).leveling.modifiers.units = ...
+    {'% PMD';'% PMD';'% PMD';'% PMD';'% PMD'};
 %% Saving changes to champdat
 save champdat.mat champdat
         
