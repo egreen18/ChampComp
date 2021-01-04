@@ -31,6 +31,12 @@ else
                     effect(j).value = effect(j).value + abi(i).values(l)*champ.stats.abilityPower/100;
                 case '% MS'  %Percent movespeed
                     effect(j).value = abi(i).values(l)*champ.stats.movespeed/100;
+                case '% bonus AD' %Bonus AD ratio
+                    effect(j).value = effect(j).value + abi(i).values(l)*(champ.stats.attackDamage...
+                        - champ.sta_base.attackDamage)/100;
+                case '% attack speed' %Total AS ratio - modifier of AD ratio
+                    effect(j).value = effect(j).value + abi(i).values(l)*champ.stats.attackSpeed*...
+                        (champ.stats.attackDamage - champ.sta_base.attackDamage)/100;
             end
         end
     end

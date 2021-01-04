@@ -17,7 +17,6 @@ else
     sta = Level(champdat,champ.ch,champ.l); %pulling the stats from the current level
     sta_new = Level(champdat,champ.ch,l); %pulling the stats for the new level
     str = fieldnames(sta); %acquiring field names of all stats in structure
-    str = [str(1:14);str(16:end)]; %excluding attackSpeed from the array
     for i = 1:length(str)
         %subtracting stats of the old level
         champ_out.stats.(str{i}) = champ_out.stats.(str{i}) - sta.(str{i}); 
@@ -28,15 +27,7 @@ else
         %the same treatment isnt necessary for the base stat tracking
         champ_out.sta_base.(str{i}) = sta_new.(str{i});
     end
-    %Treating attackspeed individually
-    %Base attack speed stat remains untouched across all levels
-    %Subtracting stats of old level
-    champ_out.stats.attackSpeed = champ_out.stats.attackSpeed - champ...
-        .sta_base.attackSpeed*champdat.(champ.ch).stats.attackSpeed...
-        .perLevel/100*champ.l;
-    %Adding stats of new level
-    champ_out.stats.attackSpeed = champ_out.stats.attackSpeed + champ...
-        .sta_base.attackSpeed*champdat.(champ.ch).stats.attackSpeed...
-        .perLevel/100*l;
+    %Attack speed base is handled differently, remaining constant
+    champ_out.sta_base.attackSpeed = Level(champdat,champ.ch,1).attackSpeed;
 end
 end

@@ -6,9 +6,13 @@ str = fieldnames(champdat.(ch).stats);
 for i = 1:length(str)
     sta.(str{i}) = getStat(champdat,str{i},ch,l);
 end
-sta.attackSpeed = champdat.(ch).stats.attackSpeed.flat; %Attack speed is handled in LevelUp.m
 function staInd = getStat(champ,stat,ch,l)
-    staInd = champ.(ch).stats.(stat).flat + champ.(ch).stats.(stat).perLevel...
-        *(l-1);
+    b = champ.(ch).stats.(stat).flat;
+    g = champ.(ch).stats.(stat).perLevel;
+    if strcmp(stat,'attackSpeed')
+        staInd = b*(100+g*(l-1)*(0.7025+0.0175*(l-1)))/100;
+    else
+        staInd = b + g*(l-1)*(0.7025+0.0175*(l-1));
+    end
 end
 end
