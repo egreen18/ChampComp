@@ -57,6 +57,10 @@ for p = 1:length(champdat.(champ.ch).abilities.(key))
                         case '% healing' %Percent bonus incoming healing
                             eff.value = eff.value + abi(i).values(l);
                             eff.value = [num2str(eff.value),' %'];
+                        case '% slow'
+                            eff.value = eff.value + abi(i).values(l)*champ2.stats.movespeed;
+                        case 's'
+                            eff.value = eff.value;
                         otherwise
                             %disp("Missing modifier!")
                             m = 1;
@@ -69,7 +73,7 @@ for p = 1:length(champdat.(champ.ch).abilities.(key))
     end
 end
 if ~isfield(effect,'type')
-    disp("This is a utility ability.")
+    disp(champ.ch+"'s "+key+" is a utility ability.")
     return
 end
 mix = 0;
