@@ -20,6 +20,7 @@ str = fieldnames(champ.stats);
 for i = 1:length(str)
     champ.stats.(str{i}) = 0;
 end
+champ.stats.magicPenPer = 0;
 sta = Level(champdat,ch,champ.l);
 str = fieldnames(sta);
 for i = 1:length(str)

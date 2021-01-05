@@ -8,12 +8,12 @@ abi = 'QWER';
 unfin = {''};
 unfinN = 0;
 range = 1:length(cha); 
-ignore = [51,81,113]; %Exlcuding Karma, Nidalee, Sona (Review these champions)
+ignore = [8,51,81,113]; %Exlcuding Aphelios, Karma, Nidalee, Sona (Review these champions)
 for i = setdiff(range,ignore)
     champ = ChampGen(itemdat,champdat,cha{i});
     champ = QuickLevel(champdat,champ);
     for j = 1:length(abi)
-        [~,m] = AbilityVal(champdat,champ,abi(j));
+        [~,m] = AbilityVal(champdat,champ,abi(j),champ);
         if m == 1
             disp("Missing modifier for "+champ.ch+"'s "+abi(j)+".")
             if ~any(strcmp(unfin,champ.ch))

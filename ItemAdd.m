@@ -32,7 +32,10 @@ else
                 end
             end
         end
-        if m == 0          
+        if m == 0
+            if ~isempty(champ.inv{slot})
+                champ_out = ItemRemove(itemdat,champ_out,slot);
+            end
             champ_out.inv{slot} = itemdat.(item).name;
             champ_out.inv_id{slot} = item;
             statin = itemdat.(item).stats;
