@@ -46,4 +46,5 @@ elseif strcmp(mod,'remove')
 else
     disp("Please enter a valid modifier, 'add' or 'remove'.")
 end
+champ_out.stats.healthCurrent = champ_out.stats.health;
 end

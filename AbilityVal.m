@@ -53,14 +53,33 @@ for p = 1:length(champdat.(champ.ch).abilities.(key))
                             eff.value = eff.value + abi(i).values(l)*(champ.stats.magicResistance...
                                 - champ.sta_base.magicResistance)/100;
                         case '% PMD' %Aatrox's percent post mitigation damage
-                            disp("This app does not play well with the Passive on Aatrox's E!")
+                            eff.value = eff.value + abi(i).values(l);
                         case '% healing' %Percent bonus incoming healing
                             eff.value = eff.value + abi(i).values(l);
                             eff.value = [num2str(eff.value),' %'];
-                        case '% slow'
+                        case '% slow' %Percent slow
                             eff.value = eff.value + abi(i).values(l)*champ2.stats.movespeed;
-                        case 's'
+                        case 's' %Duration in seconds
                             eff.value = eff.value;
+                        case '% MS mod' %Zilean's two way movespeed modifier
+                            eff.value = eff.value + abi(i).values(l);
+                        case '% of turret''s maximum health' %Ziggs demolition
+                            eff.value = eff.value + abi(i).values(l);
+                        case '% of damage dealt' %Zedd - Percent of damage dealt
+                            eff.value = eff.value + abi(i).values(l);
+                        case '% of maximum health' %Percent self max health
+                            eff.value = eff.value + abi(i).values(l)*champ.stats.health/100;
+                        case '% (+ 2% per 100 AP) of target''s maximum health' %Zac W scaling
+                            eff.value = eff.value + (abi(i).values(l)+0.02*champ.stats.abilityPower)*...
+                                champ2.stats.health;
+                        case '% attack speed mod' %Yuumi stat buff, xinzhao etc
+                            eff.value = eff.value + abi(i).values(l);
+                        case '% of target''s current health' %Percent target current HP
+                            eff.value = eff.value + abi(i).values(l)*champ2.stats.healthCurrent/100;
+                        case '% of target''s maximum health'
+                            eff.value = eff.value + abi(i).values(l)*champ2.stats.health/100;
+                        case '% clone damage' %Wukong clone damage modifier
+                            eff.value = eff.value + abi(i).values(l);
                         otherwise
                             %disp("Missing modifier!")
                             m = 1;

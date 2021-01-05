@@ -34,5 +34,5 @@ abi = ['Q','W','E','R'];
 for i = 1:length(abi)
     champ.abi.(abi(i)) = 0;
 end
-
+champ.stats.healthCurrent = champ.stats.health;
 
