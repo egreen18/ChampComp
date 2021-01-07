@@ -8,7 +8,7 @@ abi = 'QWER';
 unfin = {''};
 unfinN = 0;
 range = 1:length(cha); 
-ignore = [8,51,81,113]; %Exlcuding Aphelios, Karma, Nidalee, Sona (Review these champions)
+ignore = [8,51,81,113]; %Excluding Aphelios, Karma, Nidalee, Sona (Review these champions)
 n = 0;
 var = {''};
 for i = setdiff(range,ignore)
@@ -19,7 +19,7 @@ for i = setdiff(range,ignore)
         if m == 1
             n = n+1;
             var{n} = ['champdat.',champ.ch,'.abilities.',abi(j),'.effects'];
-            disp(['Missing modifier for ',champ.ch,'''s ',abi(j),'. '])
+            disp(['Missing modifier for ',champ.ch,'''s ',abi(j),'.'])
             if ~any(strcmp(unfin,champ.ch))
                 unfin{unfinN+1} = champ.ch;
                 unfinN = unfinN + 1;
@@ -27,4 +27,6 @@ for i = setdiff(range,ignore)
         end
     end
 end
-disp('<a href="matlab:openvar(var{n})">Link to last issue</a>')
+if ~isempty(var)
+    disp('<a href="matlab:openvar(var{n})">Link to last issue</a>')
+end

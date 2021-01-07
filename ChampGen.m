@@ -35,4 +35,16 @@ for i = 1:length(abi)
     champ.abi.(abi(i)) = 0;
 end
 champ.stats.healthCurrent = champ.stats.health;
+champ.stats.manaCurrent = champ.stats.mana;
+if strcmp(champ.ch,'Thresh')
+    champ.Souls = 0;
+elseif strcmp(champ.ch,'Senna')
+    champ.Mist = 0;
+elseif strcmp(champ.ch,'Nasus')
+    champ.Siphon = 0;
+elseif strcmp(champ.ch,'Kindred')
+    champ.Mark = 0;
+elseif strcmp(champ.ch,'Chogath')
+    champ.Feast = 0;
+end
 

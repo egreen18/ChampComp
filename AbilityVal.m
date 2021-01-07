@@ -34,12 +34,28 @@ for p = 1:length(champdat.(champ.ch).abilities.(key))
                     switch unit
                         case '' %Base damage
                             eff.value = eff.value + abi(i).values(l);
+                        case '%' %Unique champion stat or effect modifier
+                            eff.value = eff.value + abi(i).values(l);
+                        case ' soldiers' %Azir R width
+                            eff.value = eff.value + abi(i).values(l);
+                        case ' AD' %Tryndamere flat damage reduction
+                            eff.value = eff.value + abi(i).values(l);
+                        case ' bonus health' %Chogath flat stats from R
+                            eff.value = eff.value + abi(i).values(l);
+                        case '% transmission per 100 AD' %Illaoi E soul transmission
+                            eff.value = eff.value +abi(i).values(l)/100*champ.stats.attackDamage;
+                        case '% (based on level) MS'
+                            if champ.l < 10
+                                eff.value = eff.value + abi(i).values(1);
+                            elseif champ.l >= 10
+                                eff.value = eff.value + abi(i).values(2);
+                            end
+                        case '% per 100 AP' %Unique champion stat or effect modifier scaling with AP
+                            eff.value = eff.value + abi(i).values(l)*champ.stats.abilityPower/100;
                         case '% AD' %AD ratio
                             eff.value = eff.value + abi(i).values(l)*champ.stats.attackDamage/100;
                         case '% AP' %AP ratio
                             eff.value = eff.value + abi(i).values(l)*champ.stats.abilityPower/100;
-                        case '% MS'  %Percent movespeed
-                            eff.value = abi(i).values(l)*champ.stats.movespeed/100;
                         case '% bonus AD' %Bonus AD ratio
                             eff.value = eff.value + abi(i).values(l)*(champ.stats.attackDamage...
                                 - champ.sta_base.attackDamage)/100;
@@ -49,37 +65,123 @@ for p = 1:length(champdat.(champ.ch).abilities.(key))
                         case '% bonus armor' %Bonus Armor ratio
                             eff.value = eff.value + abi(i).values(l)*(champ.stats.armor...
                                 - champ.sta_base.armor)/100;
+                        case '% total armor' %Armor ratio
+                            eff.value = eff.value + abi(i).values(l)*champ.stats.armor;
+                        case '% total magic resistance'
+                            eff.value = eff.value + abi(i).values(l)*champ.stats.magicResistance;
                         case '% bonus magic resistance' %Bonus MR ratio
                             eff.value = eff.value + abi(i).values(l)*(champ.stats.magicResistance...
                                 - champ.sta_base.magicResistance)/100;
-                        case '% PMD' %Aatrox's percent post mitigation damage
-                            eff.value = eff.value + abi(i).values(l);
-                        case '% healing' %Percent bonus incoming healing
-                            eff.value = eff.value + abi(i).values(l);
-                            eff.value = [num2str(eff.value),' %'];
-                        case '% slow' %Percent slow
-                            eff.value = eff.value + abi(i).values(l)*champ2.stats.movespeed;
-                        case 's' %Duration in seconds
-                            eff.value = eff.value;
-                        case '% MS mod' %Zilean's two way movespeed modifier
-                            eff.value = eff.value + abi(i).values(l);
                         case '% of turret''s maximum health' %Ziggs demolition
                             eff.value = eff.value + abi(i).values(l);
                         case '% of damage dealt' %Zedd - Percent of damage dealt
                             eff.value = eff.value + abi(i).values(l);
                         case '% of maximum health' %Percent self max health
                             eff.value = eff.value + abi(i).values(l)*champ.stats.health/100;
-                        case '% (+ 2% per 100 AP) of target''s maximum health' %Zac W scaling
+                        case '% (+ 2% per 100 AP) of target''s maximum health' %Zac W/Shen Q scaling
                             eff.value = eff.value + (abi(i).values(l)+0.02*champ.stats.abilityPower)*...
-                                champ2.stats.health;
-                        case '% attack speed mod' %Yuumi stat buff, xinzhao etc
-                            eff.value = eff.value + abi(i).values(l);
+                                champ2.stats.health/100;
                         case '% of target''s current health' %Percent target current HP
                             eff.value = eff.value + abi(i).values(l)*champ2.stats.healthCurrent/100;
-                        case '% of target''s maximum health'
+                        case '% of target''s maximum health' %Percent target max HP
                             eff.value = eff.value + abi(i).values(l)*champ2.stats.health/100;
-                        case '% clone damage' %Wukong clone damage modifier
+                        case '% of target''s armor' %Percent target armor
+                            eff.value = eff.value + abi(i).values(l)*champ2.stats.armor/100;
+                        case '% of bonus health' %Percent of self bonus health
+                            eff.value = eff.value + abi(i).values(l)*(champ.stats.health ...
+                                - champ.sta_base.health)/100;
+                        case '% of target bonus health' %Percent of target's bonus health
+                            eff.value = eff.value + abi(i).values(l)*(champ2.stats.health ...
+                                - champ2.sta_base.health)/100;
+                        case '% of missing health' %Percent of own missing health
+                            eff.value = eff.value + abi(i).values(l)*(champ.stats.health ...
+                                - champ.stats.healthCurrent);
+                        case '% of target''s missing health' %Percent of target's missing health
+                            eff.value = eff.value + abi(i).values(l)*(champ2.stats.health ...
+                                - champ2.stats.healthCurrent);
+                        case '[ 1% per 35 ][ 2.86% per 100 ]bonus AD' %Vi W scaling with target max health and bonus AD
+                            eff.value = eff.value + 2.86/100*(champ.stats.attackDamage - ...
+                                champ.sta_base.attackDamage)*champ2.stats.health/100;
+                        case '% max health per 100 AP' %Varus W/Trundle R/Nasus R/Malz R/KogMaw W scaling with AP and target max health
+                            eff.value = eff.value + abi(i).values(l)/100*champ.stats.abilityPower*...
+                                champ2.stats.health/100;
+                        case '% current health per 100 AP' %Fiddlesticks scaling with AP and target current health
+                            eff.value = eff.value + abi(i).values(l)/100*champ.stats.abilityPower*...
+                                champ2.stats.healthCurrent/100;
+                        case '% missing health per 100 AP' %Kayle E scaling with AP and target missing health
+                            eff.value = eff.value + abi(i).values(l)/100*champ.stats.abilityPower*...
+                                (champ2.stats.health - champ2.stats.healthCurrent)/100;
+                        case '% max health per 100 bonus AD' %Kled R scaling
+                            eff.value = eff.value + abi(i).values(l)/100*(champ.stats.attackDamage...
+                                - champ.sta_base.attackDamage)*champ2.stats.health/100;
+                        case ' per Soul collected' %Thresh soul scaling on W and E
+                            eff.value = eff.value + abi(i).values(l)*champ.Souls;
+                        case ' per Mist collected' %Senna scaling
+                            eff.value = eff.value + abi(i).values(l)*champ.Mist;
+                        case '% (+ 0.25% per 100 AP) of target''s maximum health' %Amumu W scaling
+                            eff.value = eff.value + (abi(i).values(l)+0.25*champ.stats.abilityPower/100)*...
+                                champ2.stats.health/100;
+                        case '% (+ 1% per 100 AP) of target''s maximum health' %Maokai E scaling
+                            eff.value = eff.value + (abi(i).values(l)+1*champ.stats.abilityPower/100)*...
+                                champ2.stats.health/100;
+                        case '% (+ 1.5% per 100 AP) of target''s maximum health' %Shen Q/Evelynn E1 scaling
+                            eff.value = eff.value + (abi(i).values(l)+1.5*champ.stats.abilityPower/100)*...
+                                champ2.stats.health/100;
+                        case '% (+ 2.5% per 100 AP) of target''s maximum health' %Evelynn E2 scaling
+                            eff.value = eff.value + (abi(i).values(l)+2.5*champ.stats.abilityPower/100)*...
+                                champ2.stats.health/100;
+                        case '% (+ 4.5% per 100 AP) of target''s maximum health' %Shen Q scaling
+                            eff.value = eff.value + (abi(i).values(l)+4.5*champ.stats.abilityPower/100)*...
+                                champ2.stats.health/100;
+                        case '% (+ 6% per 100 AP) of target''s maximum health' %Shen Q scaling
+                            eff.value = eff.value + (abi(i).values(l)+4.5*champ.stats.abilityPower/100)*...
+                                champ2.stats.health/100;
+                        case '% (+ 3% per 100 AP) of target''s missing health' %Elise Q2 scaling
+                            eff.value = eff.value + (abi(i).values(l)+3*champ.stats.abilityPower/100)*...
+                                (champ2.stats.health - champ2.stats.healthCurrent)/100;
+                        case '% (+ 3% per 100 AP) of target''s current health' %Elise Q1 scaling
+                            eff.value = eff.value + (abi(i).values(l)+3*champ.stats.abilityPower/100)*...
+                                champ2.stats.healthCurrent/100;
+                        case '% (+ 10% per 100 bonus AD) of expended Grit' %Sett W Shield scaling
+                            eff.value = eff.value + (abi(i).values(l) + 10*(champ.stats.attackDamage - ...
+                                champ.sta_base.attackDamage)/100)*0.5*champ.stats.health/100;
+                        case '% per 1% of health lost in the past 4 seconds' %Ekko R heal scaling
                             eff.value = eff.value + abi(i).values(l);
+                        case '2% (+ 2 / 3 / 4 / 5 / 6% per 100 AD) of target''s maximum health' %Sett Q scaling
+                            eff.value = eff.value + (2 + (l+1)*champ.stats.attackDamage/100)*...
+                                champ2.stats.health;
+                        case '1% (+ 1 / 1.5 / 2 / 2.5 / 3% per 100 AD) of target''s maximum health' %Sett Q scaling
+                            eff.value = eff.value + (1 + (l+1)/2*champ.stats.attackDamage/100)*...
+                                champ2.stats.health;
+                        case '% bonus mana' %Ryze mana scaling
+                            eff.value = eff.value + abi(i).values(l)*(champ.stats.mana - ...
+                                champ.sta_base.mana)/100;
+                        case '% maximum mana' %Kassadin mana scaling
+                            eff.value = eff.value + abi(i).values(l)*champ.stats.mana/100;
+                        case '% of missing mana' %Kassadin mana restoration
+                            eff.value = eff.value + abi(i).values(l)*(champ.stats.mana - ...
+                                champ.stats.manaCurrent)/100*champ.stats.mana;
+                        case 'Siphoning Strike stacks' %Nasus Q scaling
+                            eff.value = eff.value + abi(i).values(l)*champ.Siphon;
+                        case '% (+ 5% per 100 bonus AD) of target''s maximum health' %Kled W scaling
+                            eff.value = eff.value + (abi(i).values(l)+5*(champ.stats.attackDamage - ...
+                                champ.sta_base.attackDamage)/100)*champ2.stats.health/100;
+                        case '% (+ 0.5% per Mark) of target''s missing health' %Kindred E mark scaling
+                            eff.value = eff.value + (abi(i).values(l)+0.5*champ.Mark)*...
+                                (champ2.stats.health-champ2.stats.healthCurrent)/100;
+                        case '% (+ 1% per Mark) of target''s current health' %Kindred W mark scaling
+                            eff.value = eff.value + (abi(i).values(l)+1*champ.Mark)*...
+                                champ2.stats.healthCurrent/100;
+                        case '% (+ 1.5% per Mark) of target''s current health' %Kindred W mark scaling
+                            eff.value = eff.value + (abi(i).values(l)+1.5*champ.Mark)*...
+                                champ2.stats.healthCurrent/100;
+                        case '% (+ 1.5% per Feast stack) of target''s maximum health' %Chogath feast scaling
+                            eff.value = eff.value + (abi(i).values(l) + 1.5*champ.Feast)/100*champ2.stats.health;
+                        case '% (+ 0.5% per Feast stack) of target''s maximum health' %Chogath feast scaling
+                            eff.value = eff.value + (abi(i).values(l) + 0.5*champ.Feast)/100*champ2.stats.health;
+                        case '% per 100 bonus magic resistance' %Galio magic damage reduction scaling W
+                            eff.value = eff.value + abi(i).values(l)/100*(champ.stats.magicResistance...
+                                - champ.sta_base.magicResistance);
                         otherwise
                             %disp("Missing modifier!")
                             m = 1;
@@ -92,7 +194,7 @@ for p = 1:length(champdat.(champ.ch).abilities.(key))
     end
 end
 if ~isfield(effect,'type')
-    disp(champ.ch+"'s "+key+" is a utility ability.")
+    %disp(champ.ch+"'s "+key+" is a utility ability.")
     return
 end
 mix = 0;

@@ -48,70 +48,75 @@ abi = {'Q','W','E','R'};
 %         end
 %     end
 % end
-            
-%% Manually fixing unit issues
-%Katarina modifier ambiguity and damageType
-for i = 1:5
-    champdat.Katarina.abilities.W.effects.leveling.modifiers.units{i} = '% MS';
-end
+%% Fixing general unit issues
+max100AP = {'Varus' 'Trundle' 'Nasus' 'Malzahar' 'Kog''Maw' 'Gragas'};
+for v = 1:length(cha)
+    for x = 1:length(abi)
+        for p = 1:length(champdat.(cha{v}).abilities.(abi{x}))
+        for k = 1:length(champdat.(cha{v}).abilities.(abi{x})(p).effects)
+        if ~isempty(champdat.(cha{v}).abilities.(abi{x})(p).effects(k).leveling)
+            for j = 1:length(champdat.(cha{v}).abilities.(abi{x})(p).effects(k).leveling)
+                abil = champdat.(cha{v}).abilities.(abi{x})(p).effects(k).leveling(j).modifiers;
+                for i = 1:length(abil)
+                    for l = 1:length(abil(i).units)
+                        switch abil(i).units{l}
+                            case '%  of target''s maximum health'
+                                abil(i).units{l} = '% of target''s maximum health';
+                            case '% of Zac''s maximum health'
+                                abil(i).units{l} = '% of maximum health';
+                            case {'% of his maximum health','% of Braum''s maximum health'}
+                                abil(i).units{l} = '% of maximum health';
+                            case {'% of the target''s current health','%  of target''s current health'}
+                                abil(i).units{l} = '% of target''s current health';
+                            case '% of his bonus health'
+                                abil(i).units{l} = '% of bonus health';
+                            case {'% of his missing health','% missing health'}
+                                abil(i).units{l} = '% of missing health';
+                            case '% maximum health'
+                                abil(i).units{l} = '% of maximum health';
+                            case '% bonus health'
+                                abil(i).units{l} = '% of bonus health';
+                            case '% per 100 AP'
+                                if any(strcmp(max100AP,champdat.(cha{v}).name))
+                                    abil(i).units{l} = '% max health per 100 AP';
+                                elseif strcmp(champdat.(cha{v}).name,'Galio') && strcmp(abi{x},'Q')
+                                    abil(i).units{l} = '% max health per 100 AP';
+                                elseif strcmp(champdat.(cha{v}).name,'Fiddlesticks')
+                                    abil(i).units{l} = '% current health per 100 AP';
+                                elseif strcmp(champdat.(cha{v}).name,'Kayle') && strcmp(abi{x},'E')
+                                    abil(i).units{l} = '% missing health per 100 AP';
+                                end
+                            case '% per 100 bonus AD'
+                                if any(strcmp(champdat.(cha{v}).name,{'Camille','Kled'}))
+                                    abil(i).units{l} = '% max health per 100 bonus AD';
+                                end
+                            case '% per 100 AD'
+                                if strcmp(champdat.(cha{v}).name,'Illaoi')
+                                    abil(i).units{l} = '% transmission per 100 AD';
+                                end
+                            case '%  of the target''s maximum health'
+                                abil(i).units{l} = '% of target''s maximum health';
+                            case {'% of primary target''s bonus health','% of kicked target''s bonus health'}
+                                abil(i).units{l} = '% of target bonus health';
+                            case '% of her maximum health'
+                                abil(i).units{l} = '% of maximum health';
+                            case {'% of armor','% armor','% of Taric''s armor'}
+                                abil(i).units{l} = '% total armor';
+                            case '%  of target''s missing health'
+                                abil(i).units{l} = '% of target''s missing health';
+                        end
+                        champdat.(cha{v}).abilities.(abi{x})(p).effects(k).leveling(j).modifiers = abil;
+                    end
+                end
+            end
+        end
+        end
+        end
+    end
+end    
+%% Manually fixing issues that can't be fixed iteratively
+%Katarina damageType
 champdat.Katarina.abilities.R.damageType = 'MIXED_DAMAGE';
-%Updating Aatrox units
-champdat.Aatrox.abilities.E.effects(1).leveling.modifiers.units = ...
-    {'% PMD';'% PMD';'% PMD';'% PMD';'% PMD'};
-champdat.Aatrox.abilities.R.effects(1).leveling.modifiers.units = ...
-    {'% MS';'% MS';'% MS'};
-champdat.Aatrox.abilities.R.effects(2).leveling(2).modifiers.units = ...
-    {'% healing';'% healing';'% healing'};
-%Updating Akali units
-champdat.Akali.abilities.W.effects(1).leveling(1).modifiers.units = ...
-    {'% MS';'% MS';'% MS';'% MS';'% MS'};
-%Updating Zoe units
-champdat.Zoe.abilities.E.effects(2).leveling(1).modifiers.units = ...
-    {'% slow';'% slow';'% slow';'% slow';'% slow'};
-champdat.Zoe.abilities.W.effects(4).leveling(2).modifiers.units = ...
-    {'s';'s';'s';'s';'s'};
-champdat.Zoe.abilities.W.effects(4).leveling(1).modifiers.units = ...
-    {'% MS';'% MS';'% MS';'% MS';'% MS'};
-%Updating Lux units
-champdat.Lux.abilities.E.effects(1).leveling.modifiers.units = ...
-    {'% slow';'% slow';'% slow';'% slow';'% slow'};
-%Updating Zilean units
-champdat.Zilean.abilities.E.effects.leveling.modifiers.units = ...
-    {'% MS mod';'% MS mod';'% MS mod';'% MS mod';'% MS mod'};
-%Updating Ziggs units
-champdat.Ziggs.abilities.E.effects(2).leveling(1).modifiers.units = ...
-    {'% slow';'% slow';'% slow';'% slow';'% slow'};
-%Updating Zed
-champdat.Zed.abilities.E.effects(2).leveling(1).modifiers.units = ...
-    {'% slow';'% slow';'% slow';'% slow';'% slow'};
-champdat.Zed.abilities.E.effects(2).leveling(2).modifiers.units = ...
-    {'% slow';'% slow';'% slow';'% slow';'% slow'};
-%Updating Zac
-champdat.Zac.abilities.R.effects(1).leveling.modifiers.units = ...
-    {'% of maximum health';'% of maximum health';'% of maximum health'};
-champdat.Zac.abilities.Q.effects(1).leveling(1).modifiers(3).units = ...
-    {'% of maximum health';'% of maximum health';'% of maximum health';'% of maximum health';'% of maximum health'};
-champdat.Zac.abilities.Q.effects(1).leveling(2).modifiers(3).units = ...
-    {'% of maximum health';'% of maximum health';'% of maximum health';'% of maximum health';'% of maximum health'};
-%Yuumi
-champdat.Yuumi.abilities.E.effects(1).leveling(2).modifiers.units = ...
-    {'% attack speed mod';'% attack speed mod';'% attack speed mod';'% attack speed mod';'% attack speed mod'};
-champdat.Yuumi.abilities.Q.effects(2).leveling.modifiers(3).units = ...
-    {'% of target''s current health';'% of target''s current health';'% of target''s current health';'% of target''s current health';'% of target''s current health';'% of target''s current health'};
-%XinZhao
-champdat.XinZhao.abilities.E.effects(2).leveling.modifiers.units = ...
-    {'% attack speed mod';'% attack speed mod';'% attack speed mod';'% attack speed mod';'% attack speed mod'};
-%Xerath
-champdat.Xerath.abilities.W.effects(2).leveling(2).modifiers.units = ...
-    {'% slow';'% slow';'% slow';'% slow';'% slow'};
-%Xayah
-champdat.Xayah.abilities.W.effects(1).leveling.modifiers.units = ...
-    {'% attack speed mod';'% attack speed mod';'% attack speed mod';'% attack speed mod'};
-%Wukong
-champdat.MonkeyKing.abilities.E.effects(2).leveling.modifiers.units = ...
-    {'% attack speed mod';'% attack speed mod';'% attack speed mod';'% attack speed mod'};
-champdat.MonkeyKing.abilities.W.effects(3).leveling.modifiers.units = ...
-    {'% clone damage';'% clone damage';'% clone damage';'% clone damage';'% clone damage'};
 %% Saving changes to champdat
 save champdat.mat champdat
         

@@ -32,3 +32,7 @@ if mID > 0
         champ_out = StatChange(champ_out,statin,'add');
     end
 end
+%% Current health and mana
+champ_out.stats.healthCurrent = champ_out.stats.health;
+champ_out.stats.manaCurrent = champ_out.stats.mana;
+end

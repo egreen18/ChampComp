@@ -47,4 +47,5 @@ else
     disp("Please enter a valid modifier, 'add' or 'remove'.")
 end
 champ_out.stats.healthCurrent = champ_out.stats.health;
+champ_out.stats.manaCurrent = champ_out.stats.mana;
 end
