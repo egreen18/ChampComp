@@ -117,6 +117,19 @@ end
 %% Manually fixing issues that can't be fixed iteratively
 %Katarina damageType
 champdat.Katarina.abilities.R.damageType = 'MIXED_DAMAGE';
+%Fixing Sona's non-repeating modifiers
+val = champdat.Sona.abilities.Q.effects(1).leveling.modifiers(2).values;
+champdat.Sona.abilities.Q.effects(1).leveling.modifiers(2).values = ones(5,1)*val;
+uni = champdat.Sona.abilities.Q.effects(1).leveling.modifiers(2).units;
+for i = 1:5
+    champdat.Sona.abilities.Q.effects(1).leveling.modifiers(2).units(i,1) = uni;
+end
+val = champdat.Sona.abilities.Q.effects(2).leveling.modifiers(2).values;
+champdat.Sona.abilities.Q.effects(2).leveling.modifiers(2).values = ones(5,1)*val;
+uni = champdat.Sona.abilities.Q.effects(2).leveling.modifiers(2).units;
+for i = 1:5
+    champdat.Sona.abilities.Q.effects(2).leveling.modifiers(2).units(i,1) = uni;
+end
 %% Saving changes to champdat
 save champdat.mat champdat
         
