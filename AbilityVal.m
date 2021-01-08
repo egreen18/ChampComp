@@ -66,9 +66,9 @@ for p = 1:length(champdat.(champ.ch).abilities.(key))
                             eff.value = eff.value + abi(i).values(l)*(champ.stats.armor...
                                 - champ.sta_base.armor)/100;
                         case '% total armor' %Armor ratio
-                            eff.value = eff.value + abi(i).values(l)*champ.stats.armor;
+                            eff.value = eff.value + abi(i).values(l)*champ.stats.armor/100;
                         case '% total magic resistance'
-                            eff.value = eff.value + abi(i).values(l)*champ.stats.magicResistance;
+                            eff.value = eff.value + abi(i).values(l)*champ.stats.magicResistance/100;
                         case '% bonus magic resistance' %Bonus MR ratio
                             eff.value = eff.value + abi(i).values(l)*(champ.stats.magicResistance...
                                 - champ.sta_base.magicResistance)/100;

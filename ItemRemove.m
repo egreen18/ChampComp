@@ -13,10 +13,14 @@ if slot < 1
 elseif slot > 6
     disp("The slot number chosen is too large. Choose a slot number between 1 and 6.")
 else
-    champ_out.inv{slot} = ''; %Clearing slots and pulling IDs
-    item = champ_out.inv_id{slot}; champ_out.inv_id{slot} = '';
-    statin = itemdat.(item).stats;
-    champ_out = StatChange(champ_out,statin,'remove');
-    champ_out.pass.(['slot',num2str(slot)]) = struct;
+    if isempty(champ.inv{slot})
+        return
+    else
+        champ_out.inv{slot} = ''; %Clearing slots and pulling IDs
+        item = champ_out.inv_id{slot}; champ_out.inv_id{slot} = '';
+        statin = itemdat.(item).stats;
+        champ_out = StatChange(champ_out,statin,'remove');
+        champ_out.pass.(['slot',num2str(slot)]) = struct;
+    end
 end
 end

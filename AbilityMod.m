@@ -11,11 +11,22 @@ range = 1:length(cha);
 ignore = [8,51,81]; %Excluding Aphelios, Karma, Nidalee(Review these champions)
 n = 0;
 var = {''};
+si = 0;
 for i = setdiff(range,ignore)
     champ = ChampGen(itemdat,champdat,cha{i});
     champ = QuickLevel(champdat,champ);
     for j = 1:length(abi)
-        [~,m] = AbilityVal(champdat,champ,abi(j),champ);
+        [effect,m] = AbilityVal(champdat,champ,abi(j),champ);
+        num = numel(effect);
+        siTemp = 0;
+        for z = 1:num
+            if ~isempty(effect(z).value)
+                siTemp = siTemp + 1;
+            end
+        end
+        if siTemp > si
+            si = siTemp;
+        end
         if m == 1
             n = n+1;
             var{n} = ['champdat.',champ.ch,'.abilities.',abi(j),'.effects'];
