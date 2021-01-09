@@ -81,4 +81,4 @@ for i = 1:length(items)
         end
     end
 end
-save itemdat.mat itemdat
+save('itemdat.mat','itemdat','-append')

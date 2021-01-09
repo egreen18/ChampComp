@@ -16,6 +16,7 @@ champ.ch = ch;
 champ.inv = {'';'';'';'';'';''};
 champ.inv_id = {'';'';'';'';'';''};
 champ.stats = itemdat.x3363.stats;
+champ.passive.statsMythic = champ.stats;
 str = fieldnames(champ.stats);
 for i = 1:length(str)
     champ.stats.(str{i}) = 0;

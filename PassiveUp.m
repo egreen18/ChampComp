@@ -28,9 +28,16 @@ for i = 1:6
 end
 if mID > 0
     statin = itemdat.(mID).passives(mIN).stats;
-    for i = 1:nLeg
-        champ_out = StatChange(champ_out,statin,'add');
+    sta = fieldnames(statin);
+    fie = fieldnames(statin.(sta{1}));
+    for i = 1:length(sta)
+        for j = 1:length(fie)
+        statin.(sta{i}).(fie{j}) = statin.(sta{i}).(fie{j})*nLeg;
+        end
     end
+    champ_out = StatChange(champ_out,champ_out.passive.statsMythic,'remove');
+    champ_out.passive.statsMythic = statin;
+    champ_out = StatChange(champ_out,statin,'add');
 end
 %% Current health and mana
 champ_out.stats.healthCurrent = champ_out.stats.health;
