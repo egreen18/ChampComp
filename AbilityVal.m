@@ -98,7 +98,7 @@ for p = 1:length(champdat.(champ.ch).abilities.(key))
                                 - champ.stats.healthCurrent);
                         case '% of target''s missing health' %Percent of target's missing health
                             eff.value = eff.value + abi(i).values(l)*(champ2.stats.health ...
-                                - champ2.stats.healthCurrent);
+                                - champ2.stats.healthCurrent)/100;
                         case '[ 1% per 35 ][ 2.86% per 100 ]bonus AD' %Vi W scaling with target max health and bonus AD
                             eff.value = eff.value + 2.86/100*(champ.stats.attackDamage - ...
                                 champ.sta_base.attackDamage)*champ2.stats.health/100;

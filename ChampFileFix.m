@@ -130,6 +130,14 @@ uni = champdat.Sona.abilities.Q.effects(2).leveling.modifiers(2).units;
 for i = 1:5
     champdat.Sona.abilities.Q.effects(2).leveling.modifiers(2).units(i,1) = uni;
 end
+%% Investigating resource cost field
+% for i = 1:length(cha)
+%     for j = 1:length(abi)
+%         if isempty(champdat.(cha{i}).abilities.(abi{j}).cost)
+%             disp([cha{i},' is missing a cost structure on their ',abi{j}])
+%         end
+%     end
+% end
 %% Saving changes to champdat
 save champdat.mat champdat
         
