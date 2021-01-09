@@ -38,6 +38,6 @@ for i = setdiff(range,ignore)
         end
     end
 end
-if ~isempty(var)
+if unfinN > 0
     disp('<a href="matlab:openvar(var{n})">Link to last issue</a>')
 end

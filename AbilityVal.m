@@ -243,6 +243,9 @@ for j = 1:size(effect,1)
     end
 end
 if mix == 1
+    [effect,mix] = ValMix(effect,champ,key,champ2);
+end
+if mix == 1
     disp(champ.ch+"'s "+key+" has mixed damage and needs to be reviewed!")
 end
 end

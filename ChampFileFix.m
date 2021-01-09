@@ -130,6 +130,10 @@ uni = champdat.Sona.abilities.Q.effects(2).leveling.modifiers(2).units;
 for i = 1:5
     champdat.Sona.abilities.Q.effects(2).leveling.modifiers(2).units(i,1) = uni;
 end
+%Sett W splitting damage types
+champdat.Sett.abilities.W.effects(2).leveling = champdat.Sett.abilities.W.effects(3).leveling;
+champdat.Sett.abilities.W.effects(2).leveling.attribute = 'True Damage';
+champdat.Sett.abilities.W.effects(3).leveling.attribute = 'Physical Damage';
 %% Investigating resource cost field
 % for i = 1:length(cha)
 %     for j = 1:length(abi)
