@@ -1,3 +1,4 @@
+function ChampFileFix
 %This function is a means to investigate the champdat structure and to fix
 %any discovered errors.
 %% Initialization
@@ -114,6 +115,7 @@ for v = 1:length(cha)
         end
     end
 end    
+disp("Modifer units were updated across champion abilities")
 %% Manually fixing issues that can't be fixed iteratively
 %Katarina damageType
 champdat.Katarina.abilities.R.damageType = 'MIXED_DAMAGE';
@@ -134,6 +136,7 @@ end
 champdat.Sett.abilities.W.effects(2).leveling = champdat.Sett.abilities.W.effects(3).leveling;
 champdat.Sett.abilities.W.effects(2).leveling.attribute = 'True Damage';
 champdat.Sett.abilities.W.effects(3).leveling.attribute = 'Physical Damage';
+disp("Sett and Katarina were updated for mixed damage clarity")
 %% Investigating resource cost field
 % for i = 1:length(cha)
 %     for j = 1:length(abi)
@@ -144,5 +147,5 @@ champdat.Sett.abilities.W.effects(3).leveling.attribute = 'Physical Damage';
 % end
 %% Saving changes to champdat
 save champdat.mat champdat
-        
+end
     

@@ -1,3 +1,4 @@
+function ItemFileFix
 %This function fixes naming anomalies in the item JSON file. It also proves
 %that no items are utilizing a change in stats provided per level, so this
 %value can be constant for each item.
@@ -41,6 +42,7 @@ for i = 1:length(ite)
         itemdat.(ite{i}).stats.attackSpeed.flat = 0;
     end
 end
+disp("Manually fixed stat placement issues.")
 %% Investigating mythic passives
 for i = 1:length(items)
     if strcmp(itemdat.(items{i}).rank,'MYTHIC')
@@ -70,15 +72,17 @@ for i = 1:length(items)
         ms = itemdat.(items{i}).stats.movespeed;
         itemdat.(items{i}).stats.movespeed = itemdat.x1001.stats.abilityPower;
         itemdat.(items{i}).stats.movespeed.flat = ms;
-        disp("The movespeed stat structure of "+itemdat.(items{i}).name+" was fixed.")
+        %disp("The movespeed stat structure of "+itemdat.(items{i}).name+" was fixed.")
     end
     for j = 1:length(itemdat.(items{i}).passives)
         if ~isstruct(itemdat.(items{i}).passives(j).stats.movespeed)
             ms = itemdat.(items{i}).passives(j).stats.movespeed;
             itemdat.(items{i}).passives(j).stats.movespeed = itemdat.x1001.stats.abilityPower;
             itemdat.(items{i}).passives(j).stats.movespeed.flat = ms;
-            disp("The movespeed passive stat structure of "+itemdat.(items{i}).name+" was fixed.")
+            %disp("The movespeed passive stat structure of "+itemdat.(items{i}).name+" was fixed.")
         end
     end
 end
+disp("Movespeed stat structures were updated across items and their passives.")
 save('itemdat.mat','itemdat','-append')
+end

@@ -1,3 +1,4 @@
+function AbilityMod
 %This function investigates which modifiers are still missing from the
 %AbilityVal.m function. This currently is not investigating champion
 %passives.
@@ -40,4 +41,7 @@ for i = setdiff(range,ignore)
 end
 if unfinN > 0
     disp('<a href="matlab:openvar(var{n})">Link to last issue</a>')
+elseif unfinN == 0
+    disp("All modifiers are up to date.")
+end
 end

@@ -1,6 +1,7 @@
+function ItemProcess(mute)
 %This function seeks to process the item data and create a cell array 
 %% Initializing
-clear
+clearvars -except mute
 load item_original.mat itemdat
 %% Getting keys
 itemkeyS = fieldnames(itemdat); 
@@ -23,12 +24,18 @@ for i = 1:length(itemkey)
     itemname{i} = itemdat.(['x',num2str(itemkey(i))]).name;
 end
 %% Display Item Names
-for i = 1:length(itemname)
-    disp(itemname{i})
+if mute == 0
+    for i = 1:length(itemname)
+        disp(itemname{i})
+    end
 end
 %% Display Item Keys
-for i = 1:length(itemkey)
-    disp(itemkey(i))
+if mute == 0
+    for i = 1:length(itemkey)
+        disp(itemkey(i))
+    end
 end
 %% Saving
 save('itemdat.mat','itemkey','itemname','-append')
+disp("Items were processed into relevant keys and names.")
+end
