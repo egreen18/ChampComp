@@ -49,9 +49,14 @@ for p = 1:length(champdat.(champ.ch).abilities.(key))
                             eff.value = eff.value + abi(i).values(l);
                         case ' soldiers' %Azir R width
                             eff.value = eff.value + abi(i).values(l);
-                        case 'Rscale' %Karma abilities scaling with R
-                            eff.value = eff.value + abi(i).values(l)*...
-                                champ.abi.R;
+                        case ':Rscale' %Karma abilities scaling with R
+                            eff.value = eff.value + abi(i).values(champ.abi.R);
+                        case '%:Rscale' %Percent based R scaling
+                            eff.value = eff.value + abi(i).values(champ.abi.R);
+                        case '% AD:Rscale' %R scaling, percent AD
+                            eff.value = eff.value + abi(i).values(champ.abi.R)*champ.stats.attackDamage/100;
+                        case '% AP:Rscale' %R scaling, percent AP
+                            eff.value = eff.value + abi(i).values(champ.abi.R)*champ.stats.abilityPower/100;
                         case ' AD' %Tryndamere flat damage reduction
                             eff.value = eff.value + abi(i).values(l);
                         case ' bonus health' %Chogath flat stats from R

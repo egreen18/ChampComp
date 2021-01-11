@@ -119,31 +119,33 @@ disp("Modifer units were updated across champion abilities")
 %% Manually fixing issues that can't be fixed iteratively
 %Katarina damageType
 champdat.Katarina.abilities.R.damageType = 'MIXED_DAMAGE';
-%Fixing Sona's non-repeating modifiers
-val = champdat.Sona.abilities.Q.effects(1).leveling.modifiers(2).values;
-champdat.Sona.abilities.Q.effects(1).leveling.modifiers(2).values = ones(5,1)*val;
-uni = champdat.Sona.abilities.Q.effects(1).leveling.modifiers(2).units;
-for i = 1:5
-    champdat.Sona.abilities.Q.effects(1).leveling.modifiers(2).units(i,1) = uni;
-end
-val = champdat.Sona.abilities.Q.effects(2).leveling.modifiers(2).values;
-champdat.Sona.abilities.Q.effects(2).leveling.modifiers(2).values = ones(5,1)*val;
-uni = champdat.Sona.abilities.Q.effects(2).leveling.modifiers(2).units;
-for i = 1:5
-    champdat.Sona.abilities.Q.effects(2).leveling.modifiers(2).units(i,1) = uni;
-end
 %Sett W splitting damage types
 champdat.Sett.abilities.W.effects(2).leveling = champdat.Sett.abilities.W.effects(3).leveling;
 champdat.Sett.abilities.W.effects(2).leveling.attribute = 'True Damage';
 champdat.Sett.abilities.W.effects(3).leveling.attribute = 'Physical Damage';
-%Fixing Karma non-repeating modifiers and adding R scale indicator
+%Fixing Karma non-repeating modifiers and adding R scale indicator (Sona
+%and Nidalee also had non repeating modifiers
+modBrok = {'Karma','Sona','Nidalee'};
+for p = 1:length(modBrok)
 for i = 1:3
-    for j = 1:length(champdat.Karma.abilities.(abi{i}))
-        for k = 1:length(champdat.Karma.abilities.(abi{i})(j).effects)
-            if ~isempty(champdat.Karma.abilities.(abi{i})(j).effects(k).leveling)
-            for l = 1:length(champdat.Karma.abilities.(abi{i})(j).effects(k).leveling)
-                for m = 1:length(champdat.Karma.abilities.(abi{i})(j).effects(k).leveling(l).modifiers)
-                    chTemp = champdat.Karma.abilities.(abi{i})(j).effects(k).leveling(l).modifiers(m);
+    for j = 1:length(champdat.(modBrok{p}).abilities.(abi{i}))
+        for k = 1:length(champdat.(modBrok{p}).abilities.(abi{i})(j).effects)
+            if ~isempty(champdat.(modBrok{p}).abilities.(abi{i})(j).effects(k).leveling)
+            for l = 1:length(champdat.(modBrok{p}).abilities.(abi{i})(j).effects(k).leveling)
+                for m = 1:length(champdat.(modBrok{p}).abilities.(abi{i})(j).effects(k).leveling(l).modifiers)
+                    chTemp = champdat.(modBrok{p}).abilities.(abi{i})(j).effects(k).leveling(l).modifiers(m);
+                    if length(chTemp.units) == 4
+                        for n = 1:4
+                            chTemp.units{n,1} = [chTemp.units{n,1},':Rscale'];
+                        end
+                    elseif strcmp(champdat.(modBrok{p}).name,'Nidalee') && j == 2
+                        uni = chTemp.units{1,1};
+                        chTemp.units{''};
+                        for n = 1:4
+                            chTemp.units{n,1} = uni;
+                            chTemp.units{n,1} = [chTemp.units{n,1},':Rscale'];
+                        end
+                    end
                     if length(chTemp.values) == 1
                         val = chTemp.values;
                         for n = 1:5
@@ -155,22 +157,19 @@ for i = 1:3
                         for n = 1:5
                             chTemp.units(n,1) = uni;
                         end
-                    elseif length(chTemp.units) == 4
-                        for n = 1:4
-                            chTemp.units{n,1} = 'Rscale';
-                        end
                     end
-                    champdat.Karma.abilities.(abi{i})(j).effects(k).leveling(l).modifiers(m) = chTemp;
+                    champdat.(modBrok{p}).abilities.(abi{i})(j).effects(k).leveling(l).modifiers(m) = chTemp;
                 end
             end
             end
         end
     end
 end
-                    
+end                    
         
 disp("Sett and Katarina were updated for mixed damage clarity")
-disp("Sona and Karma had their non-repeating modifiers updated")
+disp("Sona, Karma and Nidalee had their non-repeating modifiers updated")
+disp("Karma and Nidalee had the 'Rlevel' modifer added to some of their scalings.")
 %% Investigating resource cost field
 % for i = 1:length(cha)
 %     for j = 1:length(abi)
