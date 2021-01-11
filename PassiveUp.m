@@ -42,4 +42,13 @@ end
 %% Current health and mana
 champ_out.stats.healthCurrent = champ_out.stats.health;
 champ_out.stats.manaCurrent = champ_out.stats.mana;
+%% Item Passives
+for i = 1:6
+    switch champ.inv_id{i}
+        case 'x3041' %Mejai's
+            champ_out.pass.mod = 5;
+        case 'x1082' %Dark Seal
+            champ_out.pass.mod = 5;
+    end
+end
 end

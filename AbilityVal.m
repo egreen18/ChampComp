@@ -1,4 +1,4 @@
-function [effect,m,champ,champ2] = AbilityVal(champdat,champ,key,champ2)
+function [effect,m] = AbilityVal(champdat,champ,key,champ2)
 %This function calculates the effects of an ability
 %
 %   [effect,m,champ,champ2] = AbilityVal(champdat,champ,key,champ2)
@@ -12,6 +12,14 @@ function [effect,m,champ,champ2] = AbilityVal(champdat,champ,key,champ2)
 %whose abilities modify the stats of their oponents can have impact. champ
 %similarly follows through so that self-buffing abilities can have impact.
 %% Switch Case Test
+if strcmp(champ.ch,'Sylas') && strcmp(key,'R')
+    Champ = champ;
+    champ = champ2;
+    champ.stats = Champ.stats;
+    champ.stats.attackDamage = 0.6*Champ.stats.abilityPower;
+    champ.sta_base.attackDamage = 0.2*Champ.stats.abilityPower;
+    champ.abi.R = Champ.abi.R;
+end
 m = 0;
 l = champ.abi.(key);
 if l <= 0

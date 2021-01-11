@@ -37,15 +37,20 @@ for i = 1:length(abi)
 end
 champ.stats.healthCurrent = champ.stats.health;
 champ.stats.manaCurrent = champ.stats.mana;
-if strcmp(champ.ch,'Thresh')
-    champ.Souls = 0;
-elseif strcmp(champ.ch,'Senna')
-    champ.Mist = 0;
-elseif strcmp(champ.ch,'Nasus')
-    champ.Siphon = 0;
-elseif strcmp(champ.ch,'Kindred')
-    champ.Mark = 0;
-elseif strcmp(champ.ch,'Chogath')
-    champ.Feast = 0;
+if strcmp(champ.ch,'Thresh') %Souls
+    champ.Stack.lim = 0;
+    champ.Stack.lim = 10;
+elseif strcmp(champ.ch,'Senna') %Mist
+    champ.Stack.val = 0;
+    champ.Stack.lim = 10;
+elseif strcmp(champ.ch,'Nasus') %Siphon
+    champ.Stack.val = 0;
+    champ.Stack.lim = 10;
+elseif strcmp(champ.ch,'Kindred') %Marks
+    champ.Stack.val = 0;
+    champ.Stack.lim = 10;
+elseif strcmp(champ.ch,'Chogath') %Feast
+    champ.Stack.val = 0;
+    champ.Stack.lim = 10;
 end
 
