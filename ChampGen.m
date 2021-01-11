@@ -37,20 +37,22 @@ for i = 1:length(abi)
 end
 champ.stats.healthCurrent = champ.stats.health;
 champ.stats.manaCurrent = champ.stats.mana;
-if strcmp(champ.ch,'Thresh') %Souls
-    champ.Stack.lim = 0;
-    champ.Stack.lim = 10;
-elseif strcmp(champ.ch,'Senna') %Mist
+stackChamp = {'Thresh','Senna','Nasus','Kindred','Chogath'};
+%stackChamp = {Souls Mist Siphon Marks Feast}
+if any(strcmp(champ.ch,stackChamp)) %Souls
     champ.Stack.val = 0;
-    champ.Stack.lim = 10;
-elseif strcmp(champ.ch,'Nasus') %Siphon
-    champ.Stack.val = 0;
-    champ.Stack.lim = 10;
-elseif strcmp(champ.ch,'Kindred') %Marks
-    champ.Stack.val = 0;
-    champ.Stack.lim = 10;
-elseif strcmp(champ.ch,'Chogath') %Feast
-    champ.Stack.val = 0;
-    champ.Stack.lim = 10;
+    champ.Stack.stats = StatGen(itemdat);
+    switch champ.ch
+        case 'Thresh'
+            champ.Stack.name = 'Souls';
+        case 'Senna'
+            champ.Stack.name = 'Mist';
+        case 'Nasus'
+            champ.Stack.name = 'Siphon';
+        case 'Kindred'
+            champ.Stack.name = 'Marks';
+        case 'Chogath'
+            champ.Stack.name = 'Feast';
+    end
 end
 

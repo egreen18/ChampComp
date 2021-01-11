@@ -123,9 +123,9 @@ for p = 1:length(champdat.(champ.ch).abilities.(key))
                             eff.value = eff.value + abi(i).values(l)/100*(champ.stats.attackDamage...
                                 - champ.sta_base.attackDamage)*champ2.stats.health/100;
                         case ' per Soul collected' %Thresh soul scaling on W and E
-                            eff.value = eff.value + abi(i).values(l)*champ.Souls;
+                            eff.value = eff.value + abi(i).values(l)*champ.Stack.val;
                         case ' per Mist collected' %Senna scaling
-                            eff.value = eff.value + abi(i).values(l)*champ.Mist;
+                            eff.value = eff.value + abi(i).values(l)*champ.Stack.val;
                         case '% (+ 0.25% per 100 AP) of target''s maximum health' %Amumu W scaling
                             eff.value = eff.value + (abi(i).values(l)+0.25*champ.stats.abilityPower/100)*...
                                 champ2.stats.health/100;
@@ -170,23 +170,23 @@ for p = 1:length(champdat.(champ.ch).abilities.(key))
                             eff.value = eff.value + abi(i).values(l)*(champ.stats.mana - ...
                                 champ.stats.manaCurrent)/100*champ.stats.mana;
                         case 'Siphoning Strike stacks' %Nasus Q scaling
-                            eff.value = eff.value + abi(i).values(l)*champ.Siphon;
+                            eff.value = eff.value + abi(i).values(l)*champ.Stack.val;
                         case '% (+ 5% per 100 bonus AD) of target''s maximum health' %Kled W scaling
                             eff.value = eff.value + (abi(i).values(l)+5*(champ.stats.attackDamage - ...
                                 champ.sta_base.attackDamage)/100)*champ2.stats.health/100;
                         case '% (+ 0.5% per Mark) of target''s missing health' %Kindred E mark scaling
-                            eff.value = eff.value + (abi(i).values(l)+0.5*champ.Mark)*...
+                            eff.value = eff.value + (abi(i).values(l)+0.5*champ.Stack.val)*...
                                 (champ2.stats.health-champ2.stats.healthCurrent)/100;
                         case '% (+ 1% per Mark) of target''s current health' %Kindred W mark scaling
-                            eff.value = eff.value + (abi(i).values(l)+1*champ.Mark)*...
+                            eff.value = eff.value + (abi(i).values(l)+1*champ.Stack.val)*...
                                 champ2.stats.healthCurrent/100;
                         case '% (+ 1.5% per Mark) of target''s current health' %Kindred W mark scaling
-                            eff.value = eff.value + (abi(i).values(l)+1.5*champ.Mark)*...
+                            eff.value = eff.value + (abi(i).values(l)+1.5*champ.Stack.val)*...
                                 champ2.stats.healthCurrent/100;
                         case '% (+ 1.5% per Feast stack) of target''s maximum health' %Chogath feast scaling
-                            eff.value = eff.value + (abi(i).values(l) + 1.5*champ.Feast)/100*champ2.stats.health;
+                            eff.value = eff.value + (abi(i).values(l) + 1.5*champ.Stack.val)/100*champ2.stats.health;
                         case '% (+ 0.5% per Feast stack) of target''s maximum health' %Chogath feast scaling
-                            eff.value = eff.value + (abi(i).values(l) + 0.5*champ.Feast)/100*champ2.stats.health;
+                            eff.value = eff.value + (abi(i).values(l) + 0.5*champ.Stack.val)/100*champ2.stats.health;
                         case '% per 100 bonus magic resistance' %Galio magic damage reduction scaling W
                             eff.value = eff.value + abi(i).values(l)/100*(champ.stats.magicResistance...
                                 - champ.sta_base.magicResistance);
