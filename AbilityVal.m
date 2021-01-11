@@ -11,7 +11,7 @@ function [effect,m] = AbilityVal(champdat,champ,key,champ2)
 %of the input champ2, the subject champion. This is done so that champions
 %whose abilities modify the stats of their oponents can have impact. champ
 %similarly follows through so that self-buffing abilities can have impact.
-%% Switch Case Test
+%% Sylas Check
 if strcmp(champ.ch,'Sylas') && strcmp(key,'R')
     Champ = champ;
     champ = champ2;
@@ -20,6 +20,7 @@ if strcmp(champ.ch,'Sylas') && strcmp(key,'R')
     champ.sta_base.attackDamage = 0.2*Champ.stats.abilityPower;
     champ.abi.R = Champ.abi.R;
 end
+%% Running through all possible modifiers
 m = 0;
 l = champ.abi.(key);
 if l <= 0
@@ -28,6 +29,8 @@ if l <= 0
     return
 end
 effect.value = []; %Predefinition of output structure
+effect.ch = champ.ch;
+effect.key = key;
 for p = 1:length(champdat.(champ.ch).abilities.(key))
     for k = 1:length(champdat.(champ.ch).abilities.(key)(p).effects)
         if ~isempty(champdat.(champ.ch).abilities.(key)(p).effects(k).leveling)
@@ -46,6 +49,9 @@ for p = 1:length(champdat.(champ.ch).abilities.(key))
                             eff.value = eff.value + abi(i).values(l);
                         case ' soldiers' %Azir R width
                             eff.value = eff.value + abi(i).values(l);
+                        case 'Rscale' %Karma abilities scaling with R
+                            eff.value = eff.value + abi(i).values(l)*...
+                                champ.abi.R;
                         case ' AD' %Tryndamere flat damage reduction
                             eff.value = eff.value + abi(i).values(l);
                         case ' bonus health' %Chogath flat stats from R
@@ -201,6 +207,7 @@ for p = 1:length(champdat.(champ.ch).abilities.(key))
         end
     end
 end
+%% Calculating damage dealt post mitigation
 if ~isfield(effect,'type')
     %disp(champ.ch+"'s "+key+" is a utility ability.")
     return

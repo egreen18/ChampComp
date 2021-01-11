@@ -9,7 +9,7 @@ abi = 'QWER';
 unfin = {''};
 unfinN = 0;
 range = 1:length(cha); 
-ignore = [8,51,81]; %Excluding Aphelios, Karma, Nidalee(Review these champions)
+ignore = [8,81]; %Excluding Aphelios, Nidalee(Review these champions)
 n = 0;
 var = {''};
 si = 0;
@@ -40,6 +40,7 @@ for i = setdiff(range,ignore)
     end
 end
 if unfinN > 0
+    disp("There are "+unfinN+" issues(s) with scaling modifiers.")
     disp('<a href="matlab:openvar(var{n})">Link to last issue</a>')
 elseif unfinN == 0
     disp("All modifiers are up to date.")

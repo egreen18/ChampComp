@@ -136,7 +136,41 @@ end
 champdat.Sett.abilities.W.effects(2).leveling = champdat.Sett.abilities.W.effects(3).leveling;
 champdat.Sett.abilities.W.effects(2).leveling.attribute = 'True Damage';
 champdat.Sett.abilities.W.effects(3).leveling.attribute = 'Physical Damage';
+%Fixing Karma non-repeating modifiers and adding R scale indicator
+for i = 1:3
+    for j = 1:length(champdat.Karma.abilities.(abi{i}))
+        for k = 1:length(champdat.Karma.abilities.(abi{i})(j).effects)
+            if ~isempty(champdat.Karma.abilities.(abi{i})(j).effects(k).leveling)
+            for l = 1:length(champdat.Karma.abilities.(abi{i})(j).effects(k).leveling)
+                for m = 1:length(champdat.Karma.abilities.(abi{i})(j).effects(k).leveling(l).modifiers)
+                    chTemp = champdat.Karma.abilities.(abi{i})(j).effects(k).leveling(l).modifiers(m);
+                    if length(chTemp.values) == 1
+                        val = chTemp.values;
+                        for n = 1:5
+                            chTemp.values(n,1) = val;
+                        end
+                    end
+                    if length(chTemp.units) == 1
+                        uni = chTemp.units;
+                        for n = 1:5
+                            chTemp.units(n,1) = uni;
+                        end
+                    elseif length(chTemp.units) == 4
+                        for n = 1:4
+                            chTemp.units{n,1} = 'Rscale';
+                        end
+                    end
+                    champdat.Karma.abilities.(abi{i})(j).effects(k).leveling(l).modifiers(m) = chTemp;
+                end
+            end
+            end
+        end
+    end
+end
+                    
+        
 disp("Sett and Katarina were updated for mixed damage clarity")
+disp("Sona and Karma had their non-repeating modifiers updated")
 %% Investigating resource cost field
 % for i = 1:length(cha)
 %     for j = 1:length(abi)
