@@ -1,4 +1,4 @@
-function AbilityMod
+function [var,n] = AbilityMod
 %This function investigates which modifiers are still missing from the
 %AbilityVal.m function. This currently is not investigating champion
 %passives.

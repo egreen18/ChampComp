@@ -97,6 +97,8 @@ for v = 1:length(cha)
                                 end
                             case '%  of the target''s maximum health'
                                 abil(i).units{l} = '% of target''s maximum health';
+                            case '%  bonus AD'
+                                abil(i).units{l} = '% bonus AD';
                             case {'% of primary target''s bonus health','% of kicked target''s bonus health'}
                                 abil(i).units{l} = '% of target bonus health';
                             case '% of her maximum health'
@@ -105,6 +107,10 @@ for v = 1:length(cha)
                                 abil(i).units{l} = '% total armor';
                             case '%  of target''s missing health'
                                 abil(i).units{l} = '% of target''s missing health';
+                            case '% total attack speed'
+                                abil(i).units{l} = '% attack speed';
+                            case '% (based on level) movement speed'
+                                abil(i).units{l} = '% (based on level) MS';
                         end
                         champdat.(cha{v}).abilities.(abi{x})(p).effects(k).leveling(j).modifiers = abil;
                     end

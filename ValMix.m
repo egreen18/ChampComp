@@ -78,6 +78,9 @@ switch chkey
         eff(3,2).dealt = magi(eff(3,2).value,champ,champ2);
         eff(2,2).dealt = phys(eff(2,2).value,champ,champ2);
         eff(1,2).dealt = eff(3,2).dealt + eff(2,2).dealt;
+    case 'PantheonR'
+        eff(1,4).dealt = magi(eff(1,4).value,champ,champ2);
+        eff(2,4).dealt = magi(eff(2,4).value,champ,champ2);
     otherwise
         mix = 1;
 end
