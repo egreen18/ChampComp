@@ -17,6 +17,7 @@ champ.inv = {'';'';'';'';'';''};
 champ.inv_id = {'';'';'';'';'';''};
 champ.stats = itemdat.x3363.stats;
 champ.passive.statsMythic = champ.stats;
+champ.unique = struct('m',[],'b',[],'g',[]);
 str = fieldnames(champ.stats);
 for i = 1:length(str)
     champ.stats.(str{i}) = 0;

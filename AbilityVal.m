@@ -1,4 +1,4 @@
-function [effect,m] = AbilityVal(champdat,champ,key,champ2)
+function [effect,m,blurb,name] = AbilityVal(champdat,champ,key,champ2)
 %This function calculates the effects of an ability
 %
 %   [effect,m,champ,champ2] = AbilityVal(champdat,champ,key,champ2)
@@ -23,6 +23,11 @@ end
 %% Running through all possible modifiers
 m = 0;
 l = champ.abi.(key);
+name = {''}; blurb = {''};
+for p = 1:length(champdat.(champ.ch).abilities.(key))
+    blurb{p} = champdat.(champ.ch).abilities.(key)(p).blurb;
+    name{p} = champdat.(champ.ch).abilities.(key)(p).name;
+end
 if l <= 0
     disp("Make sure to level your abilities before using this function!")
     effect = {''};
@@ -31,7 +36,6 @@ end
 effect.value = []; %Predefinition of output structure
 effect.ch = champ.ch;
 effect.key = key;
-effect.blurb = champdat.(effect.ch).abilities.(key).blurb;
 for p = 1:length(champdat.(champ.ch).abilities.(key))
     for k = 1:length(champdat.(champ.ch).abilities.(key)(p).effects)
         if ~isempty(champdat.(champ.ch).abilities.(key)(p).effects(k).leveling)

@@ -185,18 +185,7 @@ disp("Karma and Nidalee had the 'Rlevel' modifer added to some of their scalings
 %     end
 % end
 %% Investigating multi faceted abilities
-max.Q = 0; max.W = 0; max.E = 0; max.R = 0;
-for i = 1:length(cha)
-    for j = 1:length(abi)
-        n = length(champdat.(cha{i}).abilities.(abi{j}));
-        if n > 1
-            disp(cha{i}+"'s "+abi{j}+" has "+n+" facets.")
-            if n > max.(abi{j})
-                max.(abi{j}) = n;
-            end
-        end
-    end
-end
+
 %% Saving changes to champdat
 save champdat.mat champdat
 end

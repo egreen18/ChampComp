@@ -21,75 +21,61 @@ b = 0;
 g = 0;
 item = ['x',num2str(item)];
 %Checking that the item is valid
-if isfield(itemdat,item)
+if ~isfield(itemdat,item)
+    disp("Please enter a valid item ID.")
+    return
+end
 %Checking if item to be added is mythic
-    if strcmp(itemdat.(item).rank,'MYTHIC')
-        %Checking for mythic already in inventory
-        range = 1:6;
-        for i = range(range~=slot) %Skipping the slot being replaced
-            %Exlcusion of slot from range is to allow for the user to
-            %easily replace a mythic item with another
-            if ~isempty(champ.inv_id{i})
-                it = champ.inv_id{i};
-                if strcmp(itemdat.(it).rank,'MYTHIC')
-                    m = 1;
-                end
-            end
-        end
+if strcmp(itemdat.(item).rank,'MYTHIC')
+    %Checking for mythic already in inventory
+    if champ.unique.m == 1
+        m = 1;
+    else
+        champ_out.unique.m = 1;
     end
+end
 %Checking if item to be added is a boot
 bootID = [3111;3006;3009;3020;3047;3117;3158;1001];
-    if any(bootID == itemdat.(item).id)
-        %Checking for boot already in inventory
-        range = 1:6;
-        for i = range(range~=slot) %Skipping the slot being replaced
-            %Exlcusion of slot from range is to allow for the user to
-            %easily replace a boot with another boot
-            if ~isempty(champ.inv_id{i})
-                it = champ.inv_id{i};
-                it = split(it,'x');
-                it = str2double(it(2));
-                if any(bootID == it)
-                    b = 1;
-                end
-            end
-        end
+if any(bootID == itemdat.(item).id)
+    %Checking for boot already in inventory
+    if champ.unique.b == 1
+        b = 1;
+    else
+        champ_out.unique.b = 1;
     end
+end
 %Checking if item to be added is a glory item
 gloryID = [3041,1082];
-    if any(gloryID == itemdat.(item).id)
-        %Checking for glory item already in inventory
-        range = 1:6;
-        for i = range(range~=slot) %Skipping the slot being replaced
-            %Exlcusion of slot from range is to allow for the user to
-            %easily replace a dark seal with a mejais etc
-            if ~isempty(champ.inv_id{i})
-                it = champ.inv_id{i};
-                it = split(it,'x');
-                it = str2double(it(2));
-                if any(gloryID == it)
-                    g = 1;
-                end
-            end
-        end
+if any(gloryID == itemdat.(item).id)
+    %Checking for glory item already in inventory
+    if champ.unique.g == 1
+        g = 1;
+    else
+        champ_out.unique.g = 1;
     end
-    if m == 0 && b == 0 && g == 0
-        if ~isempty(champ.inv{slot})
-            champ_out = ItemRemove(itemdat,champ_out,slot);
+end
+%Updating m,b,g upon removal of unique item
+if m == 0 && b == 0 && g == 0
+    if ~isempty(champ.inv{slot})
+        if strcmp(itemdat.(champ.inv_id{slot}).rank,'MYTHIC')
+            champ_out.unique.m = 0;
+        elseif any(bootID == itemdat.(champ.inv_id{slot}).id)
+            champ_out.unique.b = 0;
+        elseif any(gloryID == itemdat.(champ.inv_id{slot}).id)
+            champ_out.unique.g = 0;
         end
-        champ_out.inv{slot} = itemdat.(item).name;
-        champ_out.inv_id{slot} = item;
-        statin = itemdat.(item).stats;
-        champ_out = StatChange(champ_out,statin,'add');
-        champ_out.pass.(['slot',num2str(slot)]) = itemdat.(item).passives;
-    elseif m == 1
-        disp("A champion can only have one mythic item.")
-    elseif b == 1
-        disp("A champion can only have one pair of boots.")
-    elseif g == 1
-        disp("A champion can only have one glory item.")
+        champ_out = ItemRemove(itemdat,champ_out,slot);
     end
-else
-    disp("Please enter a valid item ID.")
+    champ_out.inv{slot} = itemdat.(item).name;
+    champ_out.inv_id{slot} = item;
+    statin = itemdat.(item).stats;
+    champ_out = StatChange(champ_out,statin,'add');
+    champ_out.pass.(['slot',num2str(slot)]) = itemdat.(item).passives;
+elseif m == 1
+    disp("A champion can only have one mythic item.")
+elseif b == 1
+    disp("A champion can only have one pair of boots.")
+elseif g == 1
+    disp("A champion can only have one glory item.")
 end
 end
