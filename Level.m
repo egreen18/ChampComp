@@ -12,6 +12,7 @@ function staInd = getStat(champ,stat,ch,l)
     b = champ.(ch).stats.(stat).flat;
     g = champ.(ch).stats.(stat).perLevel;
     if strcmp(stat,'attackSpeed')
+        b = champ.(ch).stats.attackSpeedRatio.flat;
         staInd = b*(100+g*(l-1)*(0.7025+0.0175*(l-1)))/100;
     else
         staInd = b + g*(l-1)*(0.7025+0.0175*(l-1));

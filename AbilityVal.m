@@ -31,6 +31,7 @@ end
 effect.value = []; %Predefinition of output structure
 effect.ch = champ.ch;
 effect.key = key;
+effect.blurb = champdat.(effect.ch).abilities.(key).blurb;
 for p = 1:length(champdat.(champ.ch).abilities.(key))
     for k = 1:length(champdat.(champ.ch).abilities.(key)(p).effects)
         if ~isempty(champdat.(champ.ch).abilities.(key)(p).effects(k).leveling)
