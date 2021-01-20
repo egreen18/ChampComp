@@ -27,7 +27,7 @@ from common.utils import (
     to_enum_like,
     download_json,
 )
-from modelchampion import (
+from champions.modelchampion import (
     Champion,
     Stats,
     Ability,
@@ -246,7 +246,7 @@ def main():
             #but the gist is that you can explore the object by using the keys above
             # ie x.name would give you the name of every champion in the list
 
-            if x.name == "Camille":
+            if x.name == "Katarina":
 
                 # if you want to access abilities, you have to either make a for loop and access every ability
                 # like this
@@ -255,7 +255,7 @@ def main():
                         print(abil_object)
 
                     #or you can access individual ability keys like this
-                for abil in x.abilities["P"]:
+                for abil in x.abilities["R"]:
                     #the keys are P Q W E R for abilities
                     #so it would be x.abilities["Q"] if you want a champion's Q
 
@@ -264,10 +264,11 @@ def main():
 
                 #to access stats, you just put x.stats.{insert_stat}
                 print(x.stats.attack_speed)
+                return x
 
 
 
 
 
 if __name__ == '__main__':# if the file is called directly, run main()
-    main()
+    champ = main()
