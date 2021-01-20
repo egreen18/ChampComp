@@ -10,7 +10,7 @@ fie = fieldnames(itemdat.(items{1}).stats.(str{1}));
 for i = 1:length(items)
     for j = 1:length(str)
         fie_temp = fieldnames(itemdat.(items{i}).stats.(str{j}));
-        for k = 3:length(fie)
+        for k = 1:length(fie)
             if ~strcmp(fie_temp{k},fie{k})
                 disp("Nomenclature anomaly encountered with item "+items{i}...
                     +", stat "+str{j}+", field "+fie{k})
