@@ -52,33 +52,6 @@ class Resource(OrderedEnum):
     BLOOD_WELL = "BLOOD_WELL"
 
 
-class AttackType(OrderedEnum):
-    MELEE = "MELEE"
-    RANGED = "RANGED"
-
-
-class Role(OrderedEnum):
-    TANK = "TANK"
-    FIGHTER = "FIGHTER"
-    MAGE = "MAGE"
-    MARKSMAN = "MARKSMAN"
-    SUPPORT = "SUPPORT"
-    WARDEN = "WARDEN"
-    VANGUARD = "VANGUARD"
-    JUGGERNAUT = "JUGGERNAUT"
-    CONTROLLER = "CONTROLLER"
-    SKIRMISHER = "SKIRMISHER"
-    DIVER = "DIVER"
-    SLAYER = "SLAYER"
-    BURST = "BURST"
-    BATTLEMAGE = "BATTLEMAGE"
-    ENCHANTER = "ENCHANTER"
-    CATCHER = "CATCHER"
-    ASSASSIN = "ASSASSIN"
-    SPECIALIST = "SPECIALIST"
-    ARTILLERY = "ARTILLERY"
-
-
 @dataclasses_json.dataclass_json(letter_case=dataclasses_json.LetterCase.CAMEL)
 @dataclass
 class Stats(object):
@@ -102,29 +75,6 @@ class Stats(object):
     attack_total_time: Stat
     attack_delay_offset: Stat
     attack_range: AttackRange
-    aram_damage_taken: Stat
-    aram_damage_dealt: Stat
-    aram_healing: Stat
-    aram_shielding: Stat
-    urf_damage_taken: Stat
-    urf_damage_dealt: Stat
-    urf_healing: Stat
-    urf_shielding: Stat
-
-
-@dataclasses_json.dataclass_json(letter_case=dataclasses_json.LetterCase.CAMEL)
-@dataclass
-class AttributeRatings(object):
-    damage: int
-    toughness: int
-    control: int
-    mobility: int
-    utility: int
-    ability_reliance: int
-    attack: int
-    defense: int
-    magic: int
-    difficulty: int
 
 
 @dataclasses_json.dataclass_json(letter_case=dataclasses_json.LetterCase.CAMEL)
@@ -193,93 +143,14 @@ class Ability(object):
     effect_radius: str
     target_range: str
 
-
-@dataclasses_json.dataclass_json(letter_case=dataclasses_json.LetterCase.CAMEL)
-@dataclass
-class Price(object):
-    blue_essence: int
-    rp: int
-    sale_rp: int
-
-
-@dataclasses_json.dataclass_json(letter_case=dataclasses_json.LetterCase.CAMEL)
-@dataclass
-class Description(object):
-    description: str
-    region: str
-
-
-@dataclasses_json.dataclass_json(letter_case=dataclasses_json.LetterCase.CAMEL)
-@dataclass
-class Rarities(object):
-    rarity: int
-    region: str
-
-
-@dataclasses_json.dataclass_json(letter_case=dataclasses_json.LetterCase.CAMEL)
-@dataclass
-class Chroma(object):
-    name: str
-    id: id
-    chroma_path: str
-    colors: list
-    descriptions: List[Description]
-    rarities: List[Rarities]
-
-
-@dataclasses_json.dataclass_json(letter_case=dataclasses_json.LetterCase.CAMEL)
-@dataclass
-class Skin(object):
-    name: str
-    id: int
-    is_base: bool
-    availability: str
-    format_name: str
-    loot_eligible: bool
-    cost: str
-    sale: int
-    distribution: str
-    rarity: str
-    chromas: List[Chroma]
-    lore: str
-    release: float
-    set: list
-    splash_path: str
-    uncentered_splash_path: str
-    tile_path: str
-    load_screen_path: str
-    load_screen_vintage_path: str
-    new_effects: bool
-    new_animations: bool
-    new_recall: bool
-    new_voice: bool
-    new_quotes: bool
-    voice_actor: list
-    splash_artist: list
-
-
 @dataclasses_json.dataclass_json(letter_case=dataclasses_json.LetterCase.CAMEL)
 @dataclass
 class Champion(object):
-    id: int
-    key: str
     name: str
-    title: str
-    full_name: str
     icon: str
     resource: Resource
-    attack_type: AttackType
-    adaptive_type: DamageType
     stats: Stats
-    roles: List[Role]
-    attribute_ratings: AttributeRatings
     abilities: Mapping[str, List[Ability]]
-    release_date: str
-    release_patch: str
-    patch_last_changed: str
-    price: Price
-    lore: str
-    skins: List[Skin]
 
     def __json__(self, *args, **kwargs):
         # Use dataclasses_json to get the dict

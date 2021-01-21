@@ -31,20 +31,12 @@ from champions.modelchampion import (
     Champion,
     Stats,
     Ability,
-    AttackType,
-    AttributeRatings,
     Cooldown,
     Cost,
     Effect,
-    Price,
     Resource,
     Modifier,
-    Role,
     Leveling,
-    Skin,
-    Chroma,
-    Description,
-    Rarities,
 )
 
 class jsonToObject:
@@ -60,16 +52,9 @@ class jsonToObject:
                 abil.append(self._render_ability(a)) #send the ability to _render_ability and append it to abil list
             abilities[ab] = abil #set abilities[key"] == ability list
         champ = Champion(
-            id=data["id"],
-            key=data["key"],
             name=champion,
-            title=data["title"],
-            full_name=data["fullName"],
             icon=data["icon"],
             resource=data["resource"],
-            attack_type=data["attackType"],
-            adaptive_type=data["adaptiveType"],
-
             stats=Stats(#create a stat object from the stats)
                 health=Health(
                     flat=data["stats"]["health"]["flat"],
@@ -121,38 +106,8 @@ class jsonToObject:
                 selection_radius=Stat(flat=data["stats"]["selectionRadius"]["flat"]),
                 pathing_radius=Stat(flat=data["stats"]["pathingRadius"]["flat"]),
                 gameplay_radius=Stat(flat=data["stats"]["gameplayRadius"]["flat"]),
-                aram_damage_taken=Stat(flat=data["stats"]["aramDamageTaken"]["flat"]),
-                aram_damage_dealt=Stat(flat=data["stats"]["aramDamageDealt"]["flat"]),
-                aram_healing=Stat(flat=data["stats"]["aramHealing"]["flat"]),
-                aram_shielding=Stat(flat=data["stats"]["aramShielding"]["flat"]),
-                urf_damage_taken=Stat(flat=data["stats"]["urfDamageTaken"]["flat"]),
-                urf_damage_dealt=Stat(flat=data["stats"]["urfDamageDealt"]["flat"]),
-                urf_healing=Stat(flat=data["stats"]["urfHealing"]["flat"]),
-                urf_shielding=Stat(flat=data["stats"]["urfShielding"]["flat"]),
-            ),
-            roles=data["roles"],
-            attribute_ratings=AttributeRatings(
-                damage=data["attributeRatings"]["damage"],
-                toughness=data["attributeRatings"]["toughness"],
-                control=data["attributeRatings"]["control"],
-                mobility=data["attributeRatings"]["mobility"],
-                utility=data["attributeRatings"]["utility"],
-                ability_reliance=data["attributeRatings"]["abilityReliance"],
-                attack=data["attributeRatings"]["attack"],
-                defense=data["attributeRatings"]["defense"],
-                magic=data["attributeRatings"]["magic"],
-                difficulty=data["attributeRatings"]["difficulty"],
             ),
             abilities=abilities,
-            release_date=data["releaseDate"],
-            release_patch=data["releasePatch"],
-            patch_last_changed=data["patchLastChanged"],
-            price=data["price"],
-            lore=data["lore"],
-            skins= None
-
-
-
         )
         return champ
 
@@ -221,54 +176,14 @@ class jsonToObject:
 
 
 
-def main():
+def gen_origin(new_champ):
 
-    champions = []#create an empty list that is used to hold the champions
     with open(r"../champions.json",encoding="utf8") as f:
 
         data = json.load(f) #load the json file into a dict
         stuff = jsonToObject() #initialize the jsonToObject clash
-
-        for champion in data: #create a for loop for each champion in the json file
-            #in this loop, champion == champion name
-            champ = stuff.render_champ_data(data[champion]) #send the champion data to the render_champ_data class
-            champions.append(champ) # add the champion object to the champions list
-
-
-
-
-        # how to use the data
-
-
-
-        for x in champions:
-            #x is the champion object, if you have an ide that can show objects it will help explore it
-            #but the gist is that you can explore the object by using the keys above
-            # ie x.name would give you the name of every champion in the list
-
-            if x.name == "Katarina":
-
-                # if you want to access abilities, you have to either make a for loop and access every ability
-                # like this
-                for abil_key in x.abilities:
-                    for abil_object in x.abilities[abil_key]:
-                        print(abil_object)
-
-                    #or you can access individual ability keys like this
-                for abil in x.abilities["R"]:
-                    #the keys are P Q W E R for abilities
-                    #so it would be x.abilities["Q"] if you want a champion's Q
-
-                    print(abil.name)
-                    print(abil.cast_time)
-
-                #to access stats, you just put x.stats.{insert_stat}
-                print(x.stats.attack_speed)
-                return x
-
-
-
-
-
-if __name__ == '__main__':# if the file is called directly, run main()
-    champ = main()
+        if new_champ in list(data.keys()):
+            champ_origin = stuff.render_champ_data(data[new_champ]) #send the champion data to the render_champ_data class
+            return champ_origin
+        else:
+            return "Invalid champion name"
