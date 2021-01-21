@@ -102,3 +102,14 @@ class Abilities(object):
             l = getattr(self,i)
             for j in range(len(abilities[i])):
                 l[j] = Ability(abilities[i][j])
+                
+class Stack(object):
+    def __init__(self,name):
+        self.name = name
+        self.count = 0
+        self.stats = Stats(dict(null=0),0)
+        
+class Effect(object):
+    def __init__(self,j,k):
+        self.value = [0]*((j+1)*(k+1)-1)
+        self.dealt = [0]*((j+1)*(k+1)-1)
