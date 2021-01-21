@@ -22,15 +22,19 @@ def fix():
     ## Fixing an issue with movespeed being treated as a scalar instead of a structure
     #First checking stats on all items, then checking stats on item passives
     for i in items:
-        if not type(itemdat[i]['stats']['movespeed']) is dict:
+        if  len(itemdat[i]['stats']['attackDamage']) != 6:
+            itemdat[i]['stats']['attackDamage'] = itemdat[i]['stats']['attackDamage'][0]
+        if not itemdat[i]['stats']['movespeed'] is dict:
             ms = itemdat[i]['stats']['movespeed']
             itemdat[i]['stats']['movespeed'] = itemdat['1001']['stats']['abilityPower']
             itemdat[i]['stats']['movespeed']['flat'] = ms;
-            for jdx in range(itemdat[i]['passives']):
-                if not type(itemdat[i]['passives'][jdx]['stats']['movespeed']) is dict:
-                    ms = itemdat[i]['passives'][jdx]['stats']['movespeed']
-                    itemdat[i]['passives'][jdx]['stats']['movespeed'] = itemdat['1001']['stats']['abilityPower']
-                    itemdat[i]['passives'][jdx]['stats']['movespeed']['flat'] = ms;
+        for jdx in range(len(itemdat[i]['passives'])):
+            if len(itemdat[i]['passives'][jdx]['stats']['attackDamage']) != 6:
+                itemdat[i]['passives'][jdx]['stats']['attackDamage'] = itemdat[i]['passives'][jdx]['stats']['attackDamage'][0]
+            if not itemdat[i]['passives'][jdx]['stats']['movespeed'] is dict:
+                ms = itemdat[i]['passives'][jdx]['stats']['movespeed']
+                itemdat[i]['passives'][jdx]['stats']['movespeed'] = itemdat['1001']['stats']['abilityPower']
+                itemdat[i]['passives'][jdx]['stats']['movespeed']['flat'] = ms;
     print("Movespeed stat structures were updated across items and their passives.")
     with open(r"version/latest/Items.json","w") as outfile:
         json.dump(itemdat,outfile)
