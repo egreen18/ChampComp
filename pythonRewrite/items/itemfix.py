@@ -3,7 +3,7 @@ def fix():
     #that no items are utilizing a change in stats provided per level, so this
     #value can be constant for each item.
     import json
-    with open(r"../itemOriginal.json") as f:
+    with open(r"version/latest/itemOriginal.json") as f:
         itemdat = json.load(f)
     ## Fixing a nomenclature issue
     items = list(itemdat.keys())
@@ -32,5 +32,5 @@ def fix():
                     itemdat[i]['passives'][jdx]['stats']['movespeed'] = itemdat['1001']['stats']['abilityPower']
                     itemdat[i]['passives'][jdx]['stats']['movespeed']['flat'] = ms;
     print("Movespeed stat structures were updated across items and their passives.")
-    with open(r"../Items.json","w") as outfile:
+    with open(r"version/latest/Items.json","w") as outfile:
         json.dump(itemdat,outfile)

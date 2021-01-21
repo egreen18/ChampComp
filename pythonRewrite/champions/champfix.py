@@ -3,7 +3,7 @@ def fix():
     #any discovered errors.
     ## Initialization
     import json
-    with open(r"../champOriginal.json") as f:
+    with open(r"version/latest/champOriginal.json") as f:
         champdat = json.load(f)
     cha = list(champdat.keys())
     abi = ('Q','W','E','R');
@@ -101,5 +101,5 @@ def fix():
     print("Sett and Katarina were updated for mixed damage clarity")
     print("Sona, Karma and Nidalee had their non-repeating modifiers updated")
     print("Karma and Nidalee had the 'Rlevel' modifer added to some of their scalings.")  
-    with open(r"../champions.json","w") as outfile:
+    with open(r"version/latest/champions.json","w") as outfile:
         json.dump(champdat,outfile)
