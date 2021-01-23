@@ -12,12 +12,12 @@ def fix():
     itemdat['1006']['stats']['healthRegen']['percentBase'] = itemdat['1006']['stats']['healthRegen']['percent']
     itemdat['1006']['stats']['healthRegen']['percent'] = 0;
     #manually fixing an issue with dagger
-    itemdat['1042']['stats']['attackSpeed']['percentBase'] = itemdat['1042']['stats']['attackSpeed']['flat']
-    itemdat['1042']['stats']['attackSpeed']['flat'] = 0;
-    for i in items:
-        if itemdat[i]['stats']['attackSpeed']['flat'] != 0:
-            itemdat[i]['stats']['attackSpeed']['percentBase'] = itemdat[i]['stats']['attackSpeed']['flat']
-            itemdat[i]['stats']['attackSpeed']['flat'] = 0;
+    # itemdat['1042']['stats']['attackSpeed']['percentBase'] = itemdat['1042']['stats']['attackSpeed']['flat']
+    # itemdat['1042']['stats']['attackSpeed']['flat'] = 0;
+    # for i in items:
+    #     if itemdat[i]['stats']['attackSpeed']['flat'] != 0:
+    #         itemdat[i]['stats']['attackSpeed']['percentBase'] = itemdat[i]['stats']['attackSpeed']['flat']
+    #         itemdat[i]['stats']['attackSpeed']['flat'] = 0;
     print("Manually fixed stat placement issues.")
     ## Fixing an issue with movespeed being treated as a scalar instead of a structure
     #First checking stats on all items, then checking stats on item passives

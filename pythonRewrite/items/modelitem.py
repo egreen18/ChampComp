@@ -20,25 +20,25 @@ class Active(object):
         self.cooldown = active["cooldown"]
 
 with open(r"../version/latest/Items.json",encoding="utf8") as f:
-    data = json.load(f) #load the json file into a dict
+    itemdata = json.load(f) #load the json file into a dict
         
 class Item(object):
     def __init__(self,key):
-        if not key in list(data.keys()):
+        if not key in list(itemdata.keys()):
             print('Invalid item key')
             return
-        self.name = data[key]["name"] 
-        self.id = data[key]["id"]
-        self.rank = data[key]["rank"]
-        self.removed = data[key]["removed"]
-        self.icon = data[key]["icon"]
-        self.simple_description = data[key]["simpleDescription"]
-        self.nicknames = data[key]["nicknames"]
-        self.passives = ['']*len(data[key]["passives"])
-        for i in range(len(data[key]["passives"])):
-            self.passives[i] = Passive(data[key]["passives"][i])
-        if data[key]["active"]:
-            self.active = Active(data[key]["active"][0])
+        self.name = itemdata[key]["name"] 
+        self.key = itemdata[key]["id"]
+        self.rank = itemdata[key]["rank"]
+        self.removed = itemdata[key]["removed"]
+        self.icon = itemdata[key]["icon"]
+        self.simple_description = itemdata[key]["simpleDescription"]
+        self.nicknames = itemdata[key]["nicknames"]
+        self.passives = ['']*len(itemdata[key]["passives"])
+        for i in range(len(itemdata[key]["passives"])):
+            self.passives[i] = Passive(itemdata[key]["passives"][i])
+        if itemdata[key]["active"]:
+            self.active = Active(itemdata[key]["active"][0])
         else:
             self.active = []
-        self.stats = Stats(data[key]["stats"],0)
+        self.stats = Stats(itemdata[key]["stats"],0)

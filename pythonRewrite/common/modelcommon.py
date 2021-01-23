@@ -2,21 +2,21 @@ class Stat(object):
     def __init__(self,stat):
         self.flat = stat["flat"]
         self.percent = stat["percent"]
-        self.per_level =stat["perLevel"]
-        self.percent_per_level = stat["percentPerLevel"]
+        self.perLevel =stat["perLevel"]
+        self.percentPerLevel = stat["percentPerLevel"]
         if "percentBase" in list(stat.keys()):
-            self.percent_base = stat["percentBase"]
+            self.percentBase = stat["percentBase"]
         if "peercentBonus" in list(stat.keys()):
-            self.percent_bonus = stat["percentBonus"]
+            self.percentBonus = stat["percentBonus"]
 
 class Zeros(Stat):
     def __init__(self):
         self.flat = 0
         self.percent = 0
-        self.per_level = 0
-        self.percent_per_level = 0
-        self.percent_base = 0
-        self.percent_bonus = 0
+        self.perLevel = 0
+        self.percentPerLevel = 0
+        self.percentBase = 0
+        self.percentBonus = 0
 
 class Stats(object):
     def __init__(self,stat,simple):
@@ -25,6 +25,7 @@ class Stats(object):
                 'armorPenetration',
                 'attackDamage',
                 'attackSpeed',
+                'attackSpeedRatio',
                 'cooldownReduction',
                 'criticalStrikeChance',
                 'goldPer_10',
@@ -45,6 +46,15 @@ class Stats(object):
         for i in sta:
             if i in list(stat.keys()):
                 setattr(self,i,Stat(stat[i]))
+                if i == "magicPenetration" and self.magicPenetration.percent != 0:
+                    self.magicPenPer.flat = self.magicPenetration.percent
+                    self.magicPenetrationPercent = 0
+                elif i == "criticalStrikeChance" and self.criticalStrikeChance.percent != 0:
+                    self.criticalStrikeChance.flat = self.criticalStrikeChance.percent
+                    self.criticalStrikeChance.percent = 0
+                elif i == "armorPenetration" and self.armorPenetration.percent != 0:
+                    self.armorPenetration.flat = self.armorPenetration.percent
+                    self.armorPenetration.percent = 0
             else:
                 setattr(self,i,Zeros())
         if simple == 1:
@@ -53,7 +63,7 @@ class Stats(object):
                     setattr(self,i,getattr(self,'magic_penetration').percent)
                 else:
                     setattr(self,i,getattr(self,i).flat)
-        
+            
 class Modifiers(object):
     def __init__(self, modifiers):
         self.values = modifiers["values"]
@@ -113,3 +123,30 @@ class Effect(object):
     def __init__(self,j,k):
         self.value = [0]*((j+1)*(k+1)-1)
         self.dealt = [0]*((j+1)*(k+1)-1)
+
+def StatChange(champ,statin,mod,simple):
+    if mod == 'add':
+        mod = 1
+    elif mod == 'remove':
+        mod = -1
+    if simple == 1:
+        for i in list(statin.__dict__.keys()):
+            statTemp = getattr(champ.stats,i)
+            statinTemp = getattr(statin,i)
+            if i == "attackSpeed":
+                statTemp = statTemp + mod*statinTemp*champ.stats_base.attackSpeedRatio/100
+            else:
+                statTemp = statTemp + mod*statinTemp
+            setattr(champ.stats,i,statTemp)
+    else:
+        for i in list(statin.__dict__.keys()):
+            statTemp = getattr(champ.stats,i)
+            baseTemp = getattr(champ.stats_base,i)
+            statinTemp = getattr(statin,i)
+            if i == "attackSpeed":
+                statTemp = statTemp + mod*(statinTemp.flat*champ.stats_base.attackSpeedRatio/100)
+            else:
+                statTemp = statTemp + mod*(statinTemp.flat + statinTemp.percent*statTemp
+                                   /100 + statinTemp.percentBase*baseTemp/100)
+            setattr(champ.stats,i,statTemp)
+    return champ.stats

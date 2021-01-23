@@ -52,7 +52,6 @@ def fix():
                                 elif l == '%  bonus AD':
                                     l = '% bonus AD'
                                 elif l in ("% of primary target's bonus health","% of kicked target's bonus health"):
-                                    print(v)
                                     l = '% of target bonus health'
                                 elif l == '% of her maximum health':
                                     l = '% of maximum health'
