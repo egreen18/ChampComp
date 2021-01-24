@@ -1,4 +1,4 @@
-def fix():
+def fix_items():
     #This function fixes naming anomalies in the item JSON file. It also proves
     #that no items are utilizing a change in stats provided per level, so this
     #value can be constant for each item.
@@ -24,14 +24,14 @@ def fix():
     for i in items:
         if  len(itemdat[i]['stats']['attackDamage']) != 6:
             itemdat[i]['stats']['attackDamage'] = itemdat[i]['stats']['attackDamage'][0]
-        if not itemdat[i]['stats']['movespeed'] is dict:
+        if not type(itemdat[i]['stats']['movespeed']) == dict:
             ms = itemdat[i]['stats']['movespeed']
             itemdat[i]['stats']['movespeed'] = itemdat['1001']['stats']['abilityPower']
             itemdat[i]['stats']['movespeed']['flat'] = ms;
         for jdx in range(len(itemdat[i]['passives'])):
             if len(itemdat[i]['passives'][jdx]['stats']['attackDamage']) != 6:
                 itemdat[i]['passives'][jdx]['stats']['attackDamage'] = itemdat[i]['passives'][jdx]['stats']['attackDamage'][0]
-            if not itemdat[i]['passives'][jdx]['stats']['movespeed'] is dict:
+            if not type(itemdat[i]['passives'][jdx]['stats']['movespeed']) == dict:
                 ms = itemdat[i]['passives'][jdx]['stats']['movespeed']
                 itemdat[i]['passives'][jdx]['stats']['movespeed'] = itemdat['1001']['stats']['abilityPower']
                 itemdat[i]['passives'][jdx]['stats']['movespeed']['flat'] = ms;

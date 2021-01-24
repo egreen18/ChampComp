@@ -6,7 +6,7 @@ class Stat(object):
         self.percentPerLevel = stat["percentPerLevel"]
         if "percentBase" in list(stat.keys()):
             self.percentBase = stat["percentBase"]
-        if "peercentBonus" in list(stat.keys()):
+        if "percentBonus" in list(stat.keys()):
             self.percentBonus = stat["percentBonus"]
 
 class Zeros(Stat):
@@ -34,6 +34,7 @@ class Stats(object):
                 'healthRegen',
                 'lethality',
                 'lifesteal',
+                'magicPenPer',
                 'magicPenetration',
                 'magicResistance',
                 'mana',
@@ -41,22 +42,22 @@ class Stats(object):
                 'movespeed',
                 'abilityHaste',
                 'omnivamp',
-                'tenacity',
-                'magicPenPer']
+                'tenacity']
         for i in sta:
-            if i in list(stat.keys()):
+            if not i in list(stat.keys()):
+                setattr(self,i,Zeros())
+            else:
                 setattr(self,i,Stat(stat[i]))
                 if i == "magicPenetration" and self.magicPenetration.percent != 0:
                     self.magicPenPer.flat = self.magicPenetration.percent
-                    self.magicPenetrationPercent = 0
+                    print('test')
+                    # self.magicPenetration.percent = 0
                 elif i == "criticalStrikeChance" and self.criticalStrikeChance.percent != 0:
                     self.criticalStrikeChance.flat = self.criticalStrikeChance.percent
                     self.criticalStrikeChance.percent = 0
                 elif i == "armorPenetration" and self.armorPenetration.percent != 0:
                     self.armorPenetration.flat = self.armorPenetration.percent
                     self.armorPenetration.percent = 0
-            else:
-                setattr(self,i,Zeros())
         if simple == 1:
             for i in list(self.__dict__.keys()):
                 if i == 'magic_pen_per':
@@ -123,6 +124,7 @@ class Effect(object):
     def __init__(self,j,k):
         self.value = [0]*((j+1)*(k+1)-1)
         self.dealt = [0]*((j+1)*(k+1)-1)
+        self.att = ['']*((j+1)*(k+1)-1)
 
 def StatChange(champ,statin,mod,simple):
     if mod == 'add':

@@ -1,4 +1,4 @@
-def fix():
+def fix_champs():
     #This function is a means to investigate the champdat structure and to fix
     #any discovered errors.
     ## Initialization
