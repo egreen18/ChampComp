@@ -1,5 +1,4 @@
 import json
-
 from common.modelcommon import Stats
 
 class Passive(object):

@@ -122,9 +122,16 @@ class Stack(object):
         
 class Effect(object):
     def __init__(self,j,k):
+        self.name = ['']
         self.value = [0]*((j+1)*(k+1)-1)
         self.dealt = [0]*((j+1)*(k+1)-1)
         self.att = ['']*((j+1)*(k+1)-1)
+
+class EffectList(object):
+    def __init__(self,i,j,k):
+        self.effect = ['']*i
+        for x  in range(i):
+            self.effect[x] = Effect(j,k)
 
 def StatChange(champ,statin,mod,simple):
     if mod == 'add':

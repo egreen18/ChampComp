@@ -123,36 +123,174 @@ def val(champ1,champ2,abi):
             for j in i.effects:
                 if len(j.leveling) > kmax:
                     kmax = len(j.leveling)
-    effect = [Effect(jmax,kmax)]*imax
-    
-    #Defining regex patterns
-    ratio = re.compile(r"^%\s+|.*:Rscale|.*Soul|.*Mist|.*Siphon|.*Mark|.*Feast")
-    priscale = re.compile(r"(AP|AD)")
+    effect = ['']*imax
+    for i in range(imax):
+        effect[i] = Effect(jmax,kmax)
     
     #Parsing units and calculating damage values
+    lvl = e[0].level-1
+    print(len(e))
     for idx,i in enumerate(e):
+        effect[idx].name = i.name
         for jdx,j in enumerate(i.effects):
             for kdx,k in enumerate(j.leveling):
-                lvl = e[0].level-1
-                #Rlvl = champ1.abilities.R[0].l
                 effect[idx].att[(jdx+1)*(kdx+1)-1] = k.attribute
                 eff = getattr(effect[idx],'value')[(jdx+1)*(kdx+1)-1]
                 for l in k.modifiers:
-                    if not ratio.match(l.units[lvl]):
+                    if l.units[0] == '': #Base damage
+                        eff= eff + float(l.values[lvl])
+                    elif l.units[lvl] == '%':  #Unique champion stat or effect modifier
                         eff = eff + float(l.values[lvl])
-                    elif priscale.match(ratio.split(l.units[lvl])[1]):
-                        eff = eff + float(l.values[lvl])*float(translate(
-                            priscale.match(ratio.split(l.units[lvl])[1]).group()))/100
+                    elif l.units[lvl] == ' soldiers':  #Azir R width
+                        eff = eff + float(l.values[lvl])
+                    elif l.units[lvl] == ':Rscale':  #Karma abilities scaling with R
+                        eff = eff + float(l.values[champ1.abilities.R[0].level-1])
+                    elif l.units[lvl] == '%:Rscale':  #Percent based R scaling
+                        eff = eff + float(l.values[champ1.abilities.R[0].level-1])
+                    elif l.units[lvl] == '% AD:Rscale':  #R scaling, percent AD
+                        eff = eff + float(l.values[champ1.abilities.R[0].level-1])*champ1.stats.attackDamage/100
+                    elif l.units[lvl] == '% AP:Rscale':  #R scaling, percent AP
+                        eff = eff + float(l.values[champ1.abilities.R[0].level-1])*champ1.stats.abilityPower/100
+                    elif l.units[lvl] == ' AD':  #Tryndamere flat damage reduction
+                        eff = eff + float(l.values[lvl])
+                    elif l.units[lvl] == ' bonus health':  #Chogath flat stats from R
+                        eff = eff + float(l.values[lvl])
+                    elif l.units[lvl] == '% transmission per 100 AD':  #Illaoi E soul transmission
+                        eff = eff +float(l.values[lvl])/100*champ1.stats.attackDamage
+                    elif l.units[lvl] == '% (based on level) MS':
+                        if champ1.l < 10:
+                            eff = eff + float(l.values[1])
+                        elif champ1.l >= 10:
+                            eff = eff + float(l.values[2])
+                    elif l.units[lvl] == '% per 100 AP':  #Unique champion stat or effect modifier scaling with AP
+                        eff = eff + float(l.values[lvl])*champ1.stats.abilityPower/100
+                    elif l.units[lvl] == '% AD':  #AD ratio
+                        eff = eff + float(l.values[lvl])*champ1.stats.attackDamage/100
+                    elif l.units[lvl] == '% AP':  #AP ratio
+                        eff = eff + float(l.values[lvl])*champ1.stats.abilityPower/100
+                    elif l.units[lvl] == '% bonus AD':  #Bonus AD ratio
+                        eff = eff + float(l.values[lvl])*(champ1.stats.attackDamage
+                            - champ1.stats_base.attackDamage)/100
+                    elif l.units[lvl] == '% attack speed':  #Total AS ratio - modifier of AD ratio
+                        eff = eff + float(l.values[lvl])*champ1.stats.attackSpeed*(champ1.stats.attackDamage - champ1.stats_base.attackDamage)/100
+                    elif l.units[lvl] == '% bonus armor':  #Bonus Armor ratio
+                        eff = eff + float(l.values[lvl])*(champ1.stats.armor
+                            - champ1.stats_base.armor)/100
+                    elif l.units[lvl] == '% total armor':  #Armor ratio
+                        eff = eff + float(l.values[lvl])*champ1.stats.armor/100
+                    elif l.units[lvl] == '% total magic resistance':
+                        eff = eff + float(l.values[lvl])*champ1.stats.magicResistance/100
+                    elif l.units[lvl] == '% bonus magic resistance':  #Bonus MR ratio
+                        eff = eff + float(l.values[lvl])*(champ1.stats.magicResistance
+                            - champ1.stats_base.magicResistance)/100
+                    elif l.units[lvl] == '% of turret''s maximum health':  #Ziggs demolition
+                        eff = eff + float(l.values[lvl])
+                    elif l.units[lvl] == '% of damage dealt':  #Zedd - Percent of damage dealt
+                        eff = eff + float(l.values[lvl])
+                    elif l.units[lvl] == '% of maximum health':  #Percent self max health
+                        eff = eff + float(l.values[lvl])*champ1.stats.health/100
+                    elif l.units[lvl] == '% (+ 2% per 100 AP) of target''s maximum health':  #Zac W/Shen Q scaling
+                        eff = eff + (float(l.values[lvl])+0.02*champ1.stats.abilityPower)*champ2.stats.health/100
+                    elif l.units[lvl] == '% of target''s current health':  #Percent target current HP
+                        eff = eff + float(l.values[lvl])*champ2.healthCurrent/100
+                    elif l.units[lvl] == '% of target''s maximum health':  #Percent target max HP
+                        eff = eff + float(l.values[lvl])*champ2.stats.health/100
+                    elif l.units[lvl] == '% of target''s armor':  #Percent target armor
+                        eff = eff + float(l.values[lvl])*champ2.stats.armor/100
+                    elif l.units[lvl] == '% of bonus health':  #Percent of self bonus health
+                        eff = eff + float(l.values[lvl])*(champ1.stats.health 
+                            - champ1.stats_base.health)/100
+                    elif l.units[lvl] == '% of target bonus health':  #Percent of target's bonus health
+                        eff = eff + float(l.values[lvl])*(champ2.stats.health 
+                            - champ2.stats_base.health)/100
+                    elif l.units[lvl] == '% of missing health':  #Percent of own missing health
+                        eff = eff + float(l.values[lvl])*(champ1.stats.health 
+                            - champ1.healthCurrent)
+                    elif l.units[lvl] == '% of target''s missing health':  #Percent of target's missing health
+                        eff = eff + float(l.values[lvl])*(champ2.stats.health 
+                            - champ2.healthCurrent)/100
+                    elif l.units[lvl] == '[ 1% per 35 ][ 2.86% per 100 ]bonus AD':  #Vi W scaling with target max health and bonus AD
+                        eff = eff + 2.86/100*(champ1.stats.attackDamage - 
+                            champ1.stats_base.attackDamage)*champ2.stats.health/100
+                    elif l.units[lvl] == '% max health per 100 AP':  #Varus W/Trundle R/Nasus R/Malz R/KogMaw W scaling with AP and target max health
+                        eff = eff + float(l.values[lvl])/100*champ1.stats.abilityPower*champ2.stats.health/100
+                    elif l.units[lvl] == '% current health per 100 AP':  #Fiddlesticks scaling with AP and target current health
+                        eff = eff + float(l.values[lvl])/100*champ1.stats.abilityPower*champ2.healthCurrent/100
+                    elif l.units[lvl] == '% missing health per 100 AP':  #Kayle E scaling with AP and target missing health
+                        eff = eff + float(l.values[lvl])/100*champ1.stats.abilityPower*(champ2.stats.health - champ2.healthCurrent)/100
+                    elif l.units[lvl] == '% max health per 100 bonus AD':  #Kled R scaling
+                        eff = eff + float(l.values[lvl])/100*(champ1.stats.attackDamage
+                            - champ1.stats_base.attackDamage)*champ2.stats.health/100
+                    elif l.units[lvl] == ' per Soul collected':  #Thresh soul scaling on W and E
+                        eff = eff + float(l.values[lvl])*champ1.Stack.val
+                    elif l.units[lvl] == ' per Mist collected':  #Senna scaling
+                        eff = eff + float(l.values[lvl])*champ1.Stack.val
+                    elif l.units[lvl] == '% (+ 0.25% per 100 AP) of target''s maximum health':  #Amumu W scaling
+                        eff = eff + (float(l.values[lvl])+0.25*champ1.stats.abilityPower/100)*champ2.stats.health/100
+                    elif l.units[lvl] == '% (+ 1% per 100 AP) of target''s maximum health':  #Maokai E scaling
+                        eff = eff + (float(l.values[lvl])+1*champ1.stats.abilityPower/100)*champ2.stats.health/100
+                    elif l.units[lvl] == '% (+ 1.5% per 100 AP) of target''s maximum health':  #Shen Q/Evelynn E1 scaling
+                        eff = eff + (float(l.values[lvl])+1.5*champ1.stats.abilityPower/100)*champ2.stats.health/100
+                    elif l.units[lvl] == '% (+ 2.5% per 100 AP) of target''s maximum health':  #Evelynn E2 scaling
+                        eff = eff + (float(l.values[lvl])+2.5*champ1.stats.abilityPower/100)*champ2.stats.health/100
+                    elif l.units[lvl] == '% (+ 4.5% per 100 AP) of target''s maximum health':  #Shen Q scaling
+                        eff = eff + (float(l.values[lvl])+4.5*champ1.stats.abilityPower/100)*champ2.stats.health/100
+                    elif l.units[lvl] == '% (+ 6% per 100 AP) of target''s maximum health':  #Shen Q scaling
+                        eff = eff + (float(l.values[lvl])+4.5*champ1.stats.abilityPower/100)*champ2.stats.health/100
+                    elif l.units[lvl] == '% (+ 3% per 100 AP) of target''s missing health':  #Elise Q2 scaling
+                        eff = eff + (float(l.values[lvl])+3*champ1.stats.abilityPower/100)*(champ2.stats.health - champ2.healthCurrent)/100
+                    elif l.units[lvl] == '% (+ 3% per 100 AP) of target''s current health':  #Elise Q1 scaling
+                        eff = eff + (float(l.values[lvl])+3*champ1.stats.abilityPower/100)*champ2.healthCurrent/100
+                    elif l.units[lvl] == '% (+ 10% per 100 bonus AD) of expended Grit':  #Sett W Shield scaling
+                        eff = eff + (float(l.values[lvl]) + 10*(champ1.stats.attackDamage - 
+                            champ1.stats_base.attackDamage)/100)*0.5*champ1.stats.health/100
+                    elif l.units[lvl] == '% per 1% of health lost in the past 4 seconds':  #Ekko R heal scaling
+                        eff = eff + float(l.values[lvl])
+                    elif l.units[lvl] == '2% (+ 2 / 3 / 4 / 5 / 6% per 100 AD) of target''s maximum health':  #Sett Q scaling
+                        eff = eff + (2 + (l+1)*champ1.stats.attackDamage/100)*champ2.stats.health
+                    elif l.units[lvl] == '1% (+ 1 / 1.5 / 2 / 2.5 / 3% per 100 AD) of target''s maximum health':  #Sett Q scaling
+                        eff = eff + (1 + (l+1)/2*champ1.stats.attackDamage/100)* champ2.stats.health
+                    elif l.units[lvl] == '% bonus mana':  #Ryze mana scaling
+                        eff = eff + float(l.values[lvl])*(champ1.stats.mana - 
+                            champ1.stats_base.mana)/100
+                    elif l.units[lvl] == '% maximum mana':  #Kassadin mana scaling
+                        eff = eff + float(l.values[lvl])*champ1.stats.mana/100
+                    elif l.units[lvl] == '% of missing mana':  #Kassadin mana restoration
+                        eff = eff + float(l.values[lvl])*(champ1.stats.mana - 
+                            champ1.manaCurrent)/100*champ1.stats.mana
+                    elif l.units[lvl] == 'Siphoning Strike stacks':  #Nasus Q scaling
+                        eff = eff + float(l.values[lvl])*champ1.Stack.val
+                    elif l.units[lvl] == '% (+ 5% per 100 bonus AD) of target''s maximum health':  #Kled W scaling
+                        eff = eff + (float(l.values[lvl])+5*(champ1.stats.attackDamage - 
+                            champ1.stats_base.attackDamage)/100)*champ2.stats.health/100
+                    elif l.units[lvl] == '% (+ 0.5% per Mark) of target''s missing health':  #Kindred E mark scaling
+                        eff = eff + (float(l.values[lvl])+0.5*champ1.Stack.val)*(champ2.stats.health-champ2.healthCurrent)/100
+                    elif l.units[lvl] == '% (+ 1% per Mark) of target''s current health':  #Kindred W mark scaling
+                        eff = eff + (float(l.values[lvl])+1*champ1.Stack.val)*champ2.healthCurrent/100
+                    elif l.units[lvl] == '% (+ 1.5% per Mark) of target''s current health':  #Kindred W mark scaling
+                        eff = eff + (float(l.values[lvl])+1.5*champ1.Stack.val)* champ2.healthCurrent/100
+                    elif l.units[lvl] == '% (+ 1.5% per Feast stack) of target''s maximum health':  #Chogath feast scaling
+                        eff = eff + (float(l.values[lvl]) + 1.5*champ1.Stack.val)/100*champ2.stats.health
+                    elif l.units[lvl] == '% (+ 0.5% per Feast stack) of target''s maximum health':  #Chogath feast scaling
+                        eff = eff + (float(l.values[lvl]) + 0.5*champ1.Stack.val)/100*champ2.stats.health
+                    elif l.units[lvl] == '% per 100 bonus magic resistance':  #Galio magic damage reduction scaling W
+                        eff = eff + float(l.values[lvl])/100*(champ1.stats.magicResistance
+                            - champ1.stats_base.magicResistance)
+                    else:
+                       #disp("Missing modifier!")
+                        #m = 1
+                        pass
                 effect[idx].value[(jdx+1)*(kdx+1)-1] = eff
+            
     #Removing extraneous elements of effect structure
     for idx, i in enumerate(effect):
-        for jdx in range(len(i.att)):
-            if jdx in range(len(i.att)):
-                while not i.att[jdx]:
-                    del effect[idx].att[jdx]
-                    del effect[idx].value[jdx]
-                    if not jdx in range(len(i.att)):
-                        break
+            for jdx in range(len(i.att)):
+                if not effect[idx].att[jdx]:
+                    effect[idx].value[jdx] = 'None'         
+    for idx,i in enumerate(effect):
+        while 'None' in effect[idx].value:
+            effect[idx].att.remove('')
+            effect[idx].value.remove('None')
             
     return effect
     

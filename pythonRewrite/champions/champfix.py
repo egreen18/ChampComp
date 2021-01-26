@@ -91,10 +91,10 @@ def fix_champs():
                                 for n in range(3):
                                     m['units'][n] = uni+':Rscale';
                             if len(m['values']) == 1:
-                                val = m['values']
+                                val = m['values'][0]
                                 m['values'] = [val]*5
                             if len(m['units']) == 1:
-                                uni = m['units']
+                                uni = m['units'][0]
                                 m['units'] = [uni]*5
                             champdat[p]['abilities'][abi[i]][idxj]['effects'][idxk]['leveling'][idxl]['modifiers'][idxm] = m              
             
