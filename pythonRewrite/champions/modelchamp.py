@@ -1,9 +1,8 @@
 from common.modelcommon import (Stats, Abilities, Stack, Effect, StatChange)
 from items.modelitem import (Item, itemdata)
 import json
-import re
 
-with open(r"../version/latest/champions.json",encoding="utf8") as f:
+with open(r"version/latest/champions.json",encoding="utf8") as f:
     champdata = json.load(f) #load the json file into a dict
     
 class Champ(object):
@@ -100,17 +99,114 @@ class Champ(object):
         self.healthCurrent = self.stats.health
         self.manaCurrent = self.stats.mana
         
+#magi an phys are evaluative functions for use in val and valMix
+def magi(value,champ1,champ2):
+        MR = champ2.stats.magicResistance
+        MR = MR*(100-champ1.stats.magicPenPer)/100
+        MR = MR - champ1.stats.magicPenetration
+        if MR < 0:
+            MR = 0
+        if MR >= 0:
+            dm = 100/(100+MR)
+            dealt = value*dm
+        else:
+            dm = 2-100/(100-MR)
+            dealt = value*dm
+        return dealt
+
+def phys(value,champ1,champ2):
+    AR = champ2.stats.armor
+    AR = AR*(100-champ1.stats.armorPenetration)/100
+    AR = AR - champ1.stats.lethality*(0.6+0.4*champ1.level/18)
+    if AR >= 0:
+        dm = 100/(100+AR)
+        dealt = value*dm
+    else:
+        dm = 2-100/(100-AR)
+        dealt = value*dm
+    return dealt
+    
+def valMix(effect,champ1,champ2,abi):
+    #For use in val
+    #Handles mixed damage calculations
+    chkey = champ1.name + abi
+    if chkey == 'AhriQ':
+        effect.dealt[0] = magi(effect.value[0],champ1,champ2);
+        effect.dealt[1] = effect.dealt[0] + effect.value[0];
+    # elif chkey == 'AkaliR':
+    #     eff(2,3).dealt = magi(eff(2,3).value,champ,champ2);
+    #     eff(1,3).dealt = magi(eff(1,3).value,champ,champ2);
+    #     eff(1,1).dealt = phys(eff(1,1).value,champ,champ2);
+    # elif chkey == 'CamilleQ':
+    #     eff(1,1).dealt = phys(eff(1,1).value,champ,champ2);
+    #     if champ.l <= 16:
+    #         mod = 0.36 + 0.04*champ.l;
+    #     elif champ.l > 16:
+    #         mod = 1;
+    #     eff(1,3).dealt = phys((1-mod)*eff(1,3).value,champ,champ2);
+    #     eff(1,3).dealt = eff(1,3).dealt + mod*eff(1,3).value;
+    # elif chkey == 'CorkiE':
+    #     eff(1).dealt = phys(0.5*eff(1).value,champ,champ2);
+    #     eff(1).dealt = eff(1).dealt + magi(0.5*eff(1).value,champ,champ2);
+    #     eff(2).dealt = phys(0.5*eff(2).value,champ,champ2);
+    #     eff(2).dealt = eff(2).dealt + magi(0.5*eff(2).value,champ,champ2);
+    # elif chkey == 'FizzQ':
+    #     eff.dealt = magi(eff.value,champ,champ2);
+    #     eff.dealt = eff.dealt + phys(champ.stats.attackDamage,champ,champ2);
+    # elif chkey == 'IllaoiE':
+    #     pass
+    # elif chkey == 'KatarinaR':
+    #     eff(1).dealt = phys(eff(1).value,champ,champ2);
+    #     eff(2).dealt = phys(eff(2).value,champ,champ2);
+    #     eff(3).dealt = magi(eff(3).value,champ,champ2);
+    #     eff(4).dealt = magi(eff(4).value,champ,champ2);
+    # elif chkey == 'LilliaQ':
+    #     eff(1,2).dealt = magi(eff(1,2).value,champ,champ2);
+    #     eff(2,2).dealt = eff(1,2).dealt + eff(1,2).value;
+    # elif chkey == 'NunuQ':
+    #     eff(1,1).dealt = magi(eff(1,1).value,champ,champ2);
+    #     eff(1,2).dealt = eff(1,2).value;
+    # elif chkey == 'RekSaiE':
+    #     eff(1).dealt = phys(eff(1).value,champ,champ2);
+    #     eff(2).dealt = eff(2).value;
+    # elif chkey == 'SettW':
+    #     eff(2).dealt = eff(2).value;
+    #     eff(3).dealt = phys(eff(3).value,champ,champ2);
+    # elif chkey == 'SkarnerQ':
+    #     eff(1,1).dealt = phys(eff(1,1).value,champ,champ2);
+    #     eff(1,2).dealt = magi(eff(1,2).value,champ,champ2);
+    #     eff(2,2).dealt = eff(1,2).dealt + eff(1,1).dealt;
+    # elif chkey == 'SkarnerE':
+    #     eff(1,2).dealt = magi(eff(1,2).value,champ,champ2);
+    #     eff(1,3).dealt = phys(eff(1,3).value,champ,champ2);
+    # elif chkey == 'SkarnerR':
+    #     eff(1).dealt = magi(eff(1).value,champ,champ2);
+    #     eff(2).dealt = 2*eff(1).dealt + phys(1.2*champ.stats.attackDamage,champ,champ2);
+    # elif chkey == 'UrgotR':
+    #     eff.dealt = phys(eff.value,champ,champ2);
+    # elif chkey == 'VelkozR':
+    #     eff(1,3).dealt = magi(eff(1,3).value,champ,champ2);
+    #     eff(2,3).dealt = magi(eff(2,3).value,champ,champ2);
+    # elif chkey == 'YoneW':
+    #     eff(2).dealt = phys(eff(2).value,champ,champ2);
+    #     eff(3).dealt = magi(eff(3).value,champ,champ2);
+    #     eff(1).dealt = eff(2).dealt + eff(3).dealt;
+    # elif chkey == 'YoneR':
+    #     eff(3,2).dealt = magi(eff(3,2).value,champ,champ2);
+    #     eff(2,2).dealt = phys(eff(2,2).value,champ,champ2);
+    #     eff(1,2).dealt = eff(3,2).dealt + eff(2,2).dealt;
+    # elif chkey == 'PantheonR':
+    #     eff(1,4).dealt = magi(eff(1,4).value,champ,champ2);
+    #     eff(2,4).dealt = magi(eff(2,4).value,champ,champ2);
+    else:
+        print(champ1.name+"'s "+abi+" has mixed damage and needs to be reviewed!")
+        return
+    return effect
+    
     
 def val(champ1,champ2,abi):
     #Takes input primary champion object champ1, target champion object champ2, 
     #and identiying ability string abi
-    
-    #Translating regex matches to stats
-    def translate(match):
-       if re.match(r"AP",match):
-           return champ1.stats.abilityPower
-       elif re.match(r"AD",match):
-           return champ1.stats.attackDamage
        
    #Investigating required size of effect list for predefinition
     e = getattr(champ1.abilities,abi)
@@ -129,7 +225,6 @@ def val(champ1,champ2,abi):
     
     #Parsing units and calculating damage values
     lvl = e[0].level-1
-    print(len(e))
     for idx,i in enumerate(e):
         effect[idx].name = i.name
         for jdx,j in enumerate(i.effects):
@@ -278,9 +373,10 @@ def val(champ1,champ2,abi):
                             - champ1.stats_base.magicResistance)
                     else:
                        #disp("Missing modifier!")
-                        #m = 1
-                        pass
+                       #m = 1
+                       pass
                 effect[idx].value[(jdx+1)*(kdx+1)-1] = eff
+                effect[idx].type = i.damageType
             
     #Removing extraneous elements of effect structure
     for idx, i in enumerate(effect):
@@ -291,6 +387,25 @@ def val(champ1,champ2,abi):
         while 'None' in effect[idx].value:
             effect[idx].att.remove('')
             effect[idx].value.remove('None')
+        effect[idx].dealt = ['']*len(effect[idx].value)
             
+    #Calculating damage dealt post mitigation
+    mix = 0
+    for idx,i in enumerate(effect):
+        if not i.type:
+            effect[idx].dealt = ''
+            break
+        for jdx,j in enumerate(i.dealt):
+            effect[idx].dealt[jdx] = 0
+            if i.type == 'MAGIC_DAMAGE':
+               effect[idx].dealt[jdx] = magi(effect[idx].value[jdx],champ1,champ2)
+            elif i.type == 'PHYSICAL_DAMAGE':
+                effect[idx].dealt[jdx] = phys(effect[idx].value[jdx],champ1,champ2)
+            elif i.type == 'MIXED_DAMAGE':
+                mix = 1
+            elif i.type == 'TRUE_DAMAGE':
+                effect[idx].dealt[jdx] = effect[idx].value[jdx]
+            if mix == 1:
+                effect[idx] = valMix(effect[idx],champ1,champ2,abi)
     return effect
     

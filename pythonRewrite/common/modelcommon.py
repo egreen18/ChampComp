@@ -122,10 +122,11 @@ class Stack(object):
         
 class Effect(object):
     def __init__(self,j,k):
-        self.name = ['']
+        self.name = ''
         self.value = [0]*((j+1)*(k+1)-1)
         self.dealt = [0]*((j+1)*(k+1)-1)
         self.att = ['']*((j+1)*(k+1)-1)
+        self.type = ''
 
 class EffectList(object):
     def __init__(self,i,j,k):

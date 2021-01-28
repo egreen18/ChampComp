@@ -18,7 +18,7 @@ class Active(object):
         self.range = active["range"]
         self.cooldown = active["cooldown"]
 
-with open(r"../version/latest/Items.json",encoding="utf8") as f:
+with open(r"version/latest/Items.json",encoding="utf8") as f:
     itemdata = json.load(f) #load the json file into a dict
         
 class Item(object):
