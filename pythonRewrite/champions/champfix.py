@@ -3,8 +3,12 @@ def fix_champs():
     #any discovered errors.
     ## Initialization
     import json
-    with open(r"version/latest/champOriginal.json") as f:
+    import os
+    
+    os.chdir(os.path.join('version','latest'))
+    with open(r"champOriginal.json") as f:
         champdat = json.load(f)
+        
     cha = list(champdat.keys())
     abi = ('Q','W','E','R');
     ## Fixing general unit issues
@@ -101,5 +105,7 @@ def fix_champs():
     print("Sett and Katarina were updated for mixed damage clarity")
     print("Sona, Karma and Nidalee had their non-repeating modifiers updated")
     print("Karma and Nidalee had the 'Rlevel' modifer added to some of their scalings.")  
-    with open(r"version/latest/champions.json","w") as outfile:
+    with open(r"champions.json","w") as outfile:
         json.dump(champdat,outfile)
+    os.chdir('..')
+    os.chdir('..')

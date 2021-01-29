@@ -1,10 +1,14 @@
 from common.modelcommon import (Stats, Abilities, Stack, Effect, StatChange)
 from items.modelitem import (Item, itemdata)
 import json
+import os
 
-with open(r"version/latest/champions.json",encoding="utf8") as f:
+os.chdir(os.path.join('version','latest'))
+with open(r"champions.json",encoding="utf8") as f:
     champdata = json.load(f) #load the json file into a dict
-    
+os.chdir('..')
+os.chdir('..')
+
 class Champ(object):
     def __init__(self,name):
         if not name in list(champdata.keys()):

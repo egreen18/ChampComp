@@ -1,5 +1,6 @@
 import json
 from common.modelcommon import Stats
+import os
 
 class Passive(object):
     def __init__(self,passive):
@@ -18,8 +19,11 @@ class Active(object):
         self.range = active["range"]
         self.cooldown = active["cooldown"]
 
-with open(r"version/latest/Items.json",encoding="utf8") as f:
+os.chdir(os.path.join('version','latest'))
+with open(r"Items.json",encoding="utf8") as f:
     itemdata = json.load(f) #load the json file into a dict
+os.chdir('..')
+os.chdir('..')
         
 class Item(object):
     def __init__(self,key):

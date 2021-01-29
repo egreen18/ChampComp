@@ -3,8 +3,12 @@ def fix_items():
     #that no items are utilizing a change in stats provided per level, so this
     #value can be constant for each item.
     import json
-    with open(r"version/latest/itemOriginal.json") as f:
+    import os
+    
+    os.chdir(os.path.join('version','latest'))
+    with open(r"itemOriginal.json") as f:
         itemdat = json.load(f)
+    
     ## Fixing a nomenclature issue
     items = list(itemdat.keys())
     ## Fixing stat placement issues
@@ -36,5 +40,7 @@ def fix_items():
                 itemdat[i]['passives'][jdx]['stats']['movespeed'] = itemdat['1001']['stats']['abilityPower']
                 itemdat[i]['passives'][jdx]['stats']['movespeed']['flat'] = ms;
     print("Movespeed stat structures were updated across items and their passives.")
-    with open(r"version/latest/Items.json","w") as outfile:
+    with open(r"Items.json","w") as outfile:
         json.dump(itemdat,outfile)
+    os.chdir('..')
+    os.chdir('..')
