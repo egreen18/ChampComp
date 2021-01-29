@@ -246,7 +246,7 @@ def val(champ1,champ2,abi):
     for i in range(imax):
         effect[i] = Effect(jmax,kmax)
     
-    #Parsing units and calculating damage values
+    #Parsing units and calculating damage values - needs to be redone in Regex
     lvl = e[0].level-1
     for idx,i in enumerate(e):
         effect[idx].name = i.name
