@@ -1,7 +1,7 @@
 def fix_champs():
     #This function is a means to investigate the champdat structure and to fix
     #any discovered errors.
-    ## Initialization
+    #Initialization
     import json
     import os
     
@@ -11,7 +11,7 @@ def fix_champs():
         
     cha = list(champdat.keys())
     abi = ('Q','W','E','R');
-    ## Fixing general unit issues
+    ##Fixing general known unit issues - note that this should eventually be redone in RegEx
     max100AP = ('Varus','Trundle','Nasus','Malzahar',"Kog'Maw",'Gragas');
     for v in cha:
         for x in abi:
@@ -71,7 +71,8 @@ def fix_champs():
                                 [idxk]['leveling'][idxj]['modifiers'][idxi]\
                                 ['units'][idxl] = l
     print("Modifer units were updated across champion abilities")
-    ## Manually fixing issues that can't be fixed iteratively
+    
+    #Manually fixing issues that can't be fixed iteratively
     #Katarina damageType
     champdat['Katarina']['abilities']['R'][0]['damageType'] = 'MIXED_DAMAGE';
     #Sett W splitting damage types
